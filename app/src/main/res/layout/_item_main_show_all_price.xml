@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+android:background="@drawable/card_background_all_radius_white"
+    android:id="@+id/root"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/view_list_repo_action_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@drawable/card_background_all_radius_white"
+     android:layout_margin="5dp"
+        android:layout_gravity="right"
+        android:orientation="horizontal">
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            app:cardCornerRadius="15dp">
+            <TextView
+                android:id="@+id/view_list_repo_action_delete"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="11dp"
+                android:textSize="10sp"
+                android:text="حذف"
+                android:drawableRight="@drawable/ic_baseline_delete_24_black"
+                android:textColor="@android:color/black"/>
+
+
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            app:cardCornerRadius="15dp">
+
+            <TextView
+                android:id="@+id/view_list_repo_action_update"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="11dp"
+
+                android:textSize="10sp"
+                android:text="ویرایش"
+                android:drawableRight="@drawable/ic_baseline_edit_24_black"
+                android:textColor="@android:color/black"/>
+
+
+        </androidx.cardview.widget.CardView>
+
+
+   </LinearLayout>
+
+    <include  layout="@layout/item_compare_product"/>
+
+
+</FrameLayout>

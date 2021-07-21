@@ -1,0 +1,80 @@
+apply plugin: 'com.android.application'
+apply plugin: "androidx.navigation.safeargs"
+android {
+
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.samansepahvand.calculateexpensesnew"
+        minSdkVersion 17
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+
+
+    buildTypes {
+        release {
+            buildFeatures {
+                dataBinding true
+            }
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+
+
+
+    //material google library
+    def materialVersion = '1.3.0-alpha03'
+    implementation "com.google.android.material:material:$materialVersion"
+
+
+    def nav_version = "2.3.0-alpha02"
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+
+
+
+    //persian dialog data picker(bottom sheet)
+    def persianPickerVersion="1.6.1"
+    implementation "com.github.aliab:Persian-Date-Picker-Dialog:$persianPickerVersion"
+
+    //active android
+    def activeandroid="3.1.0-SNAPSHOT"
+    implementation "com.michaelpardo:activeandroid:$activeandroid"
+
+
+    ///calligraphy library =font all Ui
+    def calligraphyVersion = "2.3.0"
+    implementation "uk.co.chrisjenx:calligraphy:$calligraphyVersion"
+
+
+    def itemtouchhelper="1.0.6"
+    implementation "com.loopeer.library:itemtouchhelperextension:$itemtouchhelper"
+
+
+
+    ///retrofit
+    def retrofit="2.1.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation 'com.google.code.gson:gson:2.6.2'
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+
+
+}
