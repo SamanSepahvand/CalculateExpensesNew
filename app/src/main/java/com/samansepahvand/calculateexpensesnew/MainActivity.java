@@ -58,13 +58,7 @@ public class MainActivity extends AppCompatActivity implements ActionInfo {
     @Override
     public void actionDelete(Info info) {
 
-        OperationResult result = InfoRepository.getInstance().DeleteItem(info);
-        if (result.IsSuccess) {
-            Toast.makeText(this, "حذف با موفقیت انجام شد ", Toast.LENGTH_SHORT).show();
-           // navController.navigate(MainFragmentDirections.actionMainFragmentToListExpensesFragment());
-        } else {
-            Toast.makeText(this, "خطا در حذف فاکتور", Toast.LENGTH_SHORT).show();
-        }
+
 
     }
 }

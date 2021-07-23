@@ -20,10 +20,15 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.samansepahvand.calculateexpensesnew.MainApplication;
 import com.samansepahvand.calculateexpensesnew.R;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.DetailMainInfo;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
+import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
+import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
 
 
 public class MainFragment extends Fragment implements View.OnClickListener {
@@ -40,10 +45,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private ImageView imgInfo;
     private BottomSheetBehavior sheetBehavior;
     private ConstraintLayout bottomSheet;
-
     private ConstraintLayout clShadow;
+    private ImageView imgMoreAdd, imgMoreList;
 
-    private ImageView imgMoreAdd,imgMoreList;
+
+    private TextView txtInvoiceCount,txtCurrentDate,txtLastInvoiceDate,txtMaxPrice,txtFullName, txtTotalPrice, txtTotalInvoice;
 
 
     public MainFragment() {
@@ -85,6 +91,18 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private void intiView(View view) {
         mNavController = Navigation.findNavController(view);
+
+
+        txtFullName = view.findViewById(R.id.txt_full_name);
+        txtTotalPrice = view.findViewById(R.id.txt_total_price);
+        txtTotalInvoice = view.findViewById(R.id.txt_count);
+        txtInvoiceCount = view.findViewById(R.id.txt_invoice_count);
+        txtCurrentDate = view.findViewById(R.id.txt_current_date);
+        txtLastInvoiceDate = view.findViewById(R.id.txt_last_invoice_date);
+        txtMaxPrice = view.findViewById(R.id.txt_max_price);
+
+        setHeaderData();
+
 
         btnShowPrice = view.findViewById(R.id.btn_show);
         btnAdd = view.findViewById(R.id.btn_add);
@@ -149,6 +167,34 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    private void setHeaderData() {
+
+
+        OperationResult<DetailMainInfo> result = InfoRepository.getInstance().DetailMainInfo();
+
+        if (result.IsSuccess) {
+            txtFullName.setText("سامان سپهوند");
+            txtTotalInvoice.setText("تعداد: "+result.Item.getInvoiceCount());
+            txtInvoiceCount.setText(result.Item.getInvoiceCount());
+            txtTotalPrice.setText(Utility.splitDigits(Integer.parseInt(result.Item.getTotalPrice())));
+
+            txtCurrentDate.setText(result.Item.getCurrentDate());
+            txtLastInvoiceDate.setText(result.Item.getLastInvoiceDate());
+            txtMaxPrice.setText(Utility.splitDigits(Integer.parseInt(result.Item.getMaxInvoicePrice())));
+        } else {
+
+            txtFullName.setText("سامان سپهوند");
+            txtTotalInvoice.setText("");
+            txtTotalPrice.setText("");
+            txtCurrentDate.setText("");
+            txtLastInvoiceDate.setText("");
+            txtMaxPrice.setText("");
+            txtInvoiceCount.setText("");
+        }
+
+
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -161,7 +207,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     public void run() {
                         mNavController.navigate(R.id.action_mainFragment_to_listExpensesFragment);
                     }
-                },400);
+                }, 400);
                 break;
             case R.id.btn_add:
                 rotateImage(imgMoreAdd);
@@ -170,7 +216,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     public void run() {
                         mNavController.navigate(R.id.action_mainFragment_to_addExpensesFragment);
                     }
-                },300);
+                }, 300);
 
 
                 break;
@@ -184,11 +230,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     private void rotateImage(ImageView imageView) {
-        ObjectAnimator imageViewObjectAnimator = ObjectAnimator.ofFloat(imageView ,
+        ObjectAnimator imageViewObjectAnimator = ObjectAnimator.ofFloat(imageView,
                 "rotation", 0f, 90f);
         imageViewObjectAnimator.setDuration(200); // miliseconds
         imageViewObjectAnimator.start();
-
 
 
     }

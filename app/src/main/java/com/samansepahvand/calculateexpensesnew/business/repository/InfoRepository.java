@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.DetailMainInfo;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.db.Info;
 
@@ -50,15 +51,12 @@ public class InfoRepository {
                 }
             } else {
                 Date date = new Date();
-
                 info.setDate(DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.SHORT).format(date));
-
                 info.save();
                 return new OperationResult<>(null, true, null);
             }
 
         } catch (Exception e) {
-
             return new OperationResult<>("خطا در  ذخیره سازی فاکتور انتخابی", false, e.getMessage());
         }
 
@@ -71,6 +69,7 @@ public class InfoRepository {
 
         try {
             new Delete().from(Info.class).where("Id=?", info.getId()).execute();
+
             return new OperationResult<>(null, true, null);
         } catch (Exception e) {
             return new OperationResult<>("خطا در حذف فاکتور !", false, e.getMessage());
@@ -97,6 +96,43 @@ public class InfoRepository {
         }
 
 
+    }
+
+
+    public OperationResult<DetailMainInfo> DetailMainInfo(){
+
+        try{
+            DetailMainInfo detailMainInfo=new DetailMainInfo();
+
+
+
+            ///total Price
+            int totalPrice = 0;
+            List<Info> infos = new Select().from(Info.class).execute();
+            if (infos.size() > 0) {
+                for (Info info : infos) {
+                    totalPrice += info.getPrice();
+                }
+            }
+            detailMainInfo.setTotalPrice(totalPrice+"");
+            /// invoiceCount
+
+            detailMainInfo.setInvoiceCount(infos.size()+"");
+            //getMaxPrice
+            List<Info> maxPrice = new Select().from(Info.class).orderBy("price desc").execute();
+            detailMainInfo.setMaxInvoicePrice(maxPrice.get(0).getPrice()+"");
+
+            //laseDate
+            detailMainInfo.setLastInvoiceDate("1 روز پیش !");
+
+            //laseDate
+            detailMainInfo.setCurrentDate("امروز یکشنبه 23 تیر می باشد  ");
+
+            return new OperationResult<DetailMainInfo>(null,true,null,detailMainInfo,null);
+        }catch (Exception e){
+            return new OperationResult<DetailMainInfo>(null,false,e.getMessage());
+
+        }
     }
 
 }

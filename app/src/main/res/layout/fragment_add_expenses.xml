@@ -308,7 +308,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/img_back_insert"
+            android:id="@+id/img_back"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginStart="24dp"
@@ -331,7 +331,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/img_back_insert"
+            app:layout_constraintStart_toEndOf="@+id/img_back"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View

@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -14,11 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 import com.samansepahvand.calculateexpensesnew.R;
+import com.samansepahvand.calculateexpensesnew.business.domain.Constants;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
 import com.samansepahvand.calculateexpensesnew.db.Info;
@@ -27,9 +32,10 @@ import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
 import com.samansepahvand.calculateexpensesnew.ui.adapter.ItemTouchHelperCallback;
 import com.samansepahvand.calculateexpensesnew.ui.adapter.MainRecyclerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ListExpensesFragment extends Fragment implements View.OnClickListener, ActionInfo {
+public class ListExpensesFragment extends Fragment implements View.OnClickListener, ActionInfo, SearchView.OnQueryTextListener {
 
 
     private static final String ARG_PARAM1 = "param1";
@@ -38,11 +44,13 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
     private String mParam1;
     private String mParam2;
     private RecyclerView recyclerView;
-    private TextView txtTotalPrice;
+    private TextView txtTotalPrice,txtInvoiceCount;
     private MainRecyclerAdapter showAdapter;
     private ItemTouchHelperExtension mItemTouchHelper;
     private ItemTouchHelperCallback mCallback;
     private NavController navController;
+    private SearchView searchView;
+    private ImageView imgBack;
 
 
     public ListExpensesFragment() {
@@ -84,19 +92,36 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
 
     private void intiView(View view) {
         navController = Navigation.findNavController(view);
+
+
+        imgBack=view.findViewById(R.id.img_back);
+
+        searchView=view.findViewById(R.id.search_view);
+
+        TextView textView = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        textView.setTextSize(12);
+        textView.setTypeface(Constants.CustomStyleElement());
+
+
+
+        txtInvoiceCount=view.findViewById(R.id.txt_count);
         txtTotalPrice = view.findViewById(R.id.txt_total_price);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         showAdapter = new MainRecyclerAdapter(getContext());
         recyclerView.setAdapter(showAdapter);
-
         initData();
+
+        searchView.setOnQueryTextListener(this);
+        imgBack.setOnClickListener(this);
 
     }
 
-    private void SupplierProductDeliveryData(List<Info> items) {
+    private void SupplierProductDeliveryData(final List<Info> items) {
+
         items.add(DammyData());
+        txtInvoiceCount.setText("تعداد: "+(items.size()-1)+"");
         showAdapter.updateData(items);
         mCallback = new ItemTouchHelperCallback();
         mItemTouchHelper = new ItemTouchHelperExtension(mCallback);
@@ -136,17 +161,48 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
 
 
     }
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        int countShow = 0;
+        OperationResult<Info> result = InfoRepository.getInstance().GetInfo();
+        List<Info> newList = new ArrayList<>();
+        for (Info info : result.Items ) {
+            if (info.getTitle().toLowerCase().contains(s)) {
+                newList.add(info);
+            } else {
+            }
+            countShow++;
+            showAdapter.updateData(newList);
+
+        }
+        return true;
+    }
+
 
 
     @Override
     public void
     actionDelete(Info info) {
 
+        if (info!=null){
+
+        }
 
     }
 
     @Override
     public void onClick(View v) {
 
+        switch (v.getId()){
+            case R.id.img_back:
+                navController.popBackStack();
+                break;
+        }
     }
 }

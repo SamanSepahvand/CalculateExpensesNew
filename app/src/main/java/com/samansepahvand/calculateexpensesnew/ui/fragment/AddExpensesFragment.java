@@ -11,7 +11,6 @@ import androidx.navigation.Navigation;
 
 import android.text.Editable;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -24,12 +23,12 @@ import android.widget.Toast;
 
 import com.samansepahvand.calculateexpensesnew.R;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.ResultMessage;
 import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
 import com.samansepahvand.calculateexpensesnew.db.Info;
+import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,6 +38,8 @@ import ir.hamsaa.persiandatepicker.api.PersianPickerDate;
 import ir.hamsaa.persiandatepicker.api.PersianPickerListener;
 
 import static com.samansepahvand.calculateexpensesnew.infrastructure.Utility.ChangeIconAddExpenses;
+import static com.samansepahvand.calculateexpensesnew.infrastructure.Utility.DialogFailed;
+import static com.samansepahvand.calculateexpensesnew.infrastructure.Utility.DialogSuccess;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -125,7 +126,7 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
         navController = Navigation.findNavController(view);
         id = (long) 0;
         txtCurrentMoney = view.findViewById(R.id.txt_curent_money);
-        imgInsertBack = view.findViewById(R.id.img_back_insert);
+        imgInsertBack = view.findViewById(R.id.img_back);
         edtPrice = view.findViewById(R.id.edt_price);
         txtDateChoose = view.findViewById(R.id.txt_date_chosse);
         txtInvoiceShow = view.findViewById(R.id.txt_invoice_show);
@@ -135,11 +136,15 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
         if (bundle != null) {
             infoData = (Info) bundle.getSerializable("Info");
             if (infoData != null) {
+
+                StateLive(infoData.getTitle(), infoData.getPrice()+"");
+
                 edtPrice.setText(infoData.getPrice() + "");
                 edtTitle.setText(infoData.getTitle());
                 id = infoData.getId();
                 //  id = bundle.getLong("Id", 0);
                 keyUpdate = true;
+
             }
 
 
@@ -250,7 +255,7 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
 
         switch (v.getId()) {
-            case R.id.img_back_insert:
+            case R.id.img_back:
                 String title = edtTitle.getText().toString();
                 String price = edtPrice.getText().toString();
                 if (validate(title, price)) {
@@ -331,23 +336,20 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
 
     private void AddNewPrice() {
 
-
         Info info = new Info();
-
         info.setTitle(edtTitle.getText().toString());
-        info.setPrice(Integer.parseInt(edtPrice.getText().toString()));
+        info.setPrice(Utility.GetPrice(edtPrice.getText().toString()));
         info.setDate(keyUpdate ? infoData.getDate() : null);
-
         OperationResult result = InfoRepository.getInstance().AddPrice(info, id);
-
         if (result.IsSuccess) {
             if (!keyUpdate)
-                Toast.makeText(getContext(), "Invoice Save Success  :) ", Toast.LENGTH_SHORT).show();
+            DialogSuccess("فاکتور مورد نظر با موفقیت اضافه شد.",getContext());
             else
-                Toast.makeText(getContext(), "Invoice Update Success  :/ ", Toast.LENGTH_SHORT).show();
+            DialogSuccess("ویرایش فاکتور مورد نظر با موفقیت انجام شد.",getContext());
             navController.navigate(R.id.action_addExpensesFragment_to_mainFragment);
         } else {
-            Toast.makeText(getContext(), "Invoice Save failed ! try again", Toast.LENGTH_SHORT).show();
+            DialogFailed(ResultMessage.ErrorMessage,getContext());
+
         }
 
     }
