@@ -88,7 +88,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout6"
 
-        app:srcCompat="@drawable/ic_baseline_clear_24_black" />
+        app:srcCompat="@drawable/ic_baseline_clear_black24" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
