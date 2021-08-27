@@ -25,6 +25,7 @@ import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 import com.samansepahvand.calculateexpensesnew.R;
 import com.samansepahvand.calculateexpensesnew.business.domain.Constants;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.UserInformations;
 import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
 import com.samansepahvand.calculateexpensesnew.db.Info;
 import com.samansepahvand.calculateexpensesnew.helper.interfaces.ActionInfo;
@@ -44,7 +45,7 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
     private String mParam1;
     private String mParam2;
     private RecyclerView recyclerView;
-    private TextView txtTotalPrice,txtInvoiceCount;
+    private TextView txtTotalPrice,txtInvoiceCount,txtFullName;
     private MainRecyclerAdapter showAdapter;
     private ItemTouchHelperExtension mItemTouchHelper;
     private ItemTouchHelperCallback mCallback;
@@ -93,6 +94,7 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
     private void intiView(View view) {
         navController = Navigation.findNavController(view);
 
+        txtFullName=view.findViewById(R.id.txt_full_name);
 
         imgBack=view.findViewById(R.id.img_back);
 
@@ -116,6 +118,7 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
         searchView.setOnQueryTextListener(this);
         imgBack.setOnClickListener(this);
 
+        txtFullName.setText(UserInformations.getFullName());
     }
 
     private void SupplierProductDeliveryData(final List<Info> items) {

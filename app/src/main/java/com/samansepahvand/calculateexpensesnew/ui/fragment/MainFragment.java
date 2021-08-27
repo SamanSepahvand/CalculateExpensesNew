@@ -1,6 +1,7 @@
 package com.samansepahvand.calculateexpensesnew.ui.fragment;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Matrix;
 import android.os.Bundle;
 
@@ -25,10 +26,14 @@ import android.widget.TextView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.samansepahvand.calculateexpensesnew.MainApplication;
 import com.samansepahvand.calculateexpensesnew.R;
+import com.samansepahvand.calculateexpensesnew.business.domain.Constants;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.DetailMainInfo;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.UserInformations;
 import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
 import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
+import com.samansepahvand.calculateexpensesnew.ui.activity.AuthenticationActivity;
+import com.samansepahvand.calculateexpensesnew.ui.modal.AlertDialogModal;
 
 
 public class MainFragment extends Fragment implements View.OnClickListener {
@@ -46,7 +51,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private BottomSheetBehavior sheetBehavior;
     private ConstraintLayout bottomSheet;
     private ConstraintLayout clShadow;
-    private ImageView imgMoreAdd, imgMoreList;
+    private ImageView imgMoreAdd, imgMoreList,imgMoreInfo;
 
 
     private TextView txtInvoiceCount,txtCurrentDate,txtLastInvoiceDate,txtMaxPrice,txtFullName, txtTotalPrice, txtTotalInvoice;
@@ -100,6 +105,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         txtCurrentDate = view.findViewById(R.id.txt_current_date);
         txtLastInvoiceDate = view.findViewById(R.id.txt_last_invoice_date);
         txtMaxPrice = view.findViewById(R.id.txt_max_price);
+
+        imgMoreInfo = view.findViewById(R.id.img_more_info);
 
         setHeaderData();
 
@@ -163,7 +170,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         imgInfo.setOnClickListener(this);
         btnAdd.setOnClickListener(this);
         btnShowPrice.setOnClickListener(this);
-
+        imgMoreInfo.setOnClickListener(this);
 
     }
 
@@ -173,7 +180,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         OperationResult<DetailMainInfo> result = InfoRepository.getInstance().DetailMainInfo();
 
         if (result.IsSuccess) {
-            txtFullName.setText("سامان سپهوند");
+            txtFullName.setText(UserInformations.getFullName());
             txtTotalInvoice.setText("تعداد: "+result.Item.getInvoiceCount());
             txtInvoiceCount.setText(result.Item.getInvoiceCount());
             txtTotalPrice.setText(Utility.splitDigits(Integer.parseInt(result.Item.getTotalPrice())));
@@ -183,8 +190,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             txtMaxPrice.setText(Utility.splitDigits(Integer.parseInt(result.Item.getMaxInvoicePrice())));
         } else {
 
-            txtFullName.setText("سامان سپهوند");
-            txtTotalInvoice.setText("");
+            txtFullName.setText(UserInformations.getFullName());
+            txtTotalInvoice.setText("تعداد فاکتور ها : 0");
             txtTotalPrice.setText("");
             txtCurrentDate.setText("");
             txtLastInvoiceDate.setText("");
@@ -220,6 +227,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
 
                 break;
+            case R.id.img_more_info:
+
+                ErrorResponse(Constants.exitMessage());
+                break;
 
             case R.id.img_info:
 
@@ -237,6 +248,35 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
 
     }
+
+
+
+    private void ErrorResponse(String result) {
+
+
+        final AlertDialogModal modal2 = new AlertDialogModal(getActivity(), true, true);
+        modal2.setImageTypeCustom(Constants.TypeImageAlertDialog[1]);
+        modal2.setButtonConfirmCustom("خروج", Constants.TypeButtonStyleAlertDialog[1]);
+        modal2.setTextContent(result);
+        modal2.setCancelButton(new AlertDialogModal.OnCancelInterface() {
+            @Override
+            public void cancel() {
+                modal2.dismiss();
+            }
+        });
+        modal2.setAcceptButton(new AlertDialogModal.OnAcceptInterface() {
+            @Override
+            public void accept() {
+
+                startActivity(new Intent(getActivity(), AuthenticationActivity.class));
+                getActivity().finish();
+            }
+        });
+        modal2.show();
+
+
+    }
+
 
 
 }

@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 
 import com.samansepahvand.calculateexpensesnew.MainApplication;
 import com.samansepahvand.calculateexpensesnew.R;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.UserInformations;
 
 public class Constants {
 
@@ -28,7 +29,6 @@ public class Constants {
 
 
 
-
     public static int[] TypeImageAlertDialog = new int[]{
 
             R.drawable.ic_baseline_info_black_24,   //0
@@ -47,6 +47,10 @@ public class Constants {
             R.drawable.shape_background_button_dialog_confirm_light, //4
 
     };
+    public static String exitMessage() {
+        String data = "کاربر <font color=red><b>"+ UserInformations.getFullName() +"</b></font> آیا مایل به خروج از برنامه می باشید ؟";
+        return data;
+    }
 
 
 

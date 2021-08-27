@@ -1,4 +1,4 @@
-package com.samansepahvand.calculateexpensesnew;
+package com.samansepahvand.calculateexpensesnew.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.samansepahvand.calculateexpensesnew.R;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
 import com.samansepahvand.calculateexpensesnew.db.Info;
@@ -18,17 +19,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity implements ActionInfo {
 
-
     private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-
         initView();
-
 
     }
 
