@@ -212,6 +212,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
 
 
         if (tempUserName.equals("") || tempPassword.equals("")) {
+
             return true;
 
         } else {
