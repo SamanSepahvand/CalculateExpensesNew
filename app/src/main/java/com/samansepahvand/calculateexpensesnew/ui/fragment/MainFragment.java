@@ -191,8 +191,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         } else {
 
             txtFullName.setText(UserInformations.getFullName());
-            txtTotalInvoice.setText("تعداد فاکتور ها : 0");
-            txtTotalPrice.setText("");
+            txtTotalInvoice.setText("تعداد : 0");
+            txtTotalPrice.setText("0");
             txtCurrentDate.setText("");
             txtLastInvoiceDate.setText("");
             txtMaxPrice.setText("");
