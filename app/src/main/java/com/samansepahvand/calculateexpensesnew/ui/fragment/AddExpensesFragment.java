@@ -155,8 +155,13 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
         imgInsertBack.setOnClickListener(this);
         txtDateChoose.setOnClickListener(this);
 
+        PersianDataPicker();
+
 
     }
+
+
+
 
     private void EdtOnline() {
 
@@ -164,6 +169,7 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
         txtInvoiceShow.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+             //   OnlineInvoices();
 
             }
 
@@ -183,6 +189,7 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+                OnlineInvoices();
             }
 
             @Override
@@ -232,7 +239,6 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
             public void afterTextChanged(Editable s) {
                 priceLength = s.toString();
                 StateLive(titleLength, priceLength);
-
 
                 invoiceTitle = s.toString();
 
@@ -311,11 +317,7 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
 
                         txtDateChoose.setText(persianPickerDate.getPersianLongDate());
                         date = persianPickerDate.getPersianLongDate();
-                        Spanned strHtml = Html.fromHtml(" شما در تاریخ  " + "<font color='red'>"
-                                + date + "</font>" + " مبلغ  " + "<font color='red'>" + invoicePrice
-                                + "</font>" + " بابت هزینه  " + "<font color='red'>" + invoiceTitle + "</font>" + " پرداخت کرده اید. ");
-
-                        txtInvoiceShow.setText(strHtml);
+                        OnlineInvoices();
 
 
 //                        persianTime = persianPickerDate.getGregorianDate() + "";
@@ -331,6 +333,18 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
                     }
                 });
         picker.show();
+    }
+
+
+
+    private void OnlineInvoices(){
+
+        Spanned strHtml = Html.fromHtml(" شما در تاریخ  " + "<font color='red'>"
+                + date + "</font>" + " مبلغ  " + "<font color='red'>" + invoicePrice
+                + "</font>" + " بابت هزینه  " + "<font color='red'>" + invoiceTitle + "</font>" + " پرداخت کرده اید. ");
+
+        txtInvoiceShow.setText(strHtml);
+
     }
 
 

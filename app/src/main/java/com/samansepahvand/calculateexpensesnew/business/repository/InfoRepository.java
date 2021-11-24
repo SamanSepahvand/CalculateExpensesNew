@@ -7,6 +7,7 @@ import com.activeandroid.query.Select;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.DetailMainInfo;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.db.Info;
+import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
 
 
 import java.text.DateFormat;
@@ -44,6 +45,10 @@ public class InfoRepository {
                     infoUpdate.setPrice(info.getPrice());
                     infoUpdate.setDate(info.getDate());
                     infoUpdate.setTitle(info.getTitle());
+
+                    infoUpdate.setEnglishDate(String.valueOf(Utility.getMiladyDate()));
+                    infoUpdate.setFarsiDate(Utility.getIranianDate());
+
                     infoUpdate.save();
                     return new OperationResult<>(null, true, null);
                 }else{
@@ -52,6 +57,9 @@ public class InfoRepository {
             } else {
                 Date date = new Date();
                 info.setDate(DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.SHORT).format(date));
+                info.setEnglishDate(String.valueOf(Utility.getMiladyDate()));
+                info.setFarsiDate(Utility.getIranianDate());
+
                 info.save();
                 return new OperationResult<>(null, true, null);
             }
@@ -80,10 +88,18 @@ public class InfoRepository {
     public OperationResult<Info> GetInfo() {
         try {
             int totalPrice = 0;
-            List<Info> infos = new Select().from(Info.class).execute();
+            List<Info> infos = new Select().from(Info.class)
+                    .orderBy(Info.DATE+" desc")
+                    .execute();
             if (infos.size() > 0) {
                 for (Info info : infos) {
                     totalPrice += info.getPrice();
+                    info.setFarsiDate(Utility.ShowTimeFarsi(info));
+
+                    info.setEstimateDate(Utility.SeparateTimeForEstimate(info.getEnglishDate()).getEstimatedTime()+" روز پیش ");
+
+
+
                 }
                 return new OperationResult<>(String.valueOf(totalPrice), true, null, null, infos);
             }
@@ -123,10 +139,10 @@ public class InfoRepository {
             detailMainInfo.setMaxInvoicePrice(maxPrice.get(0).getPrice()+"");
 
             //laseDate
-            detailMainInfo.setLastInvoiceDate("1 روز پیش !");
+            detailMainInfo.setLastInvoiceDate(Utility.SeparateTimeForEstimate(infos.get(infos.size()-1).getEnglishDate()).getEstimatedTime()+" روز پیش ");
 
             //laseDate
-            detailMainInfo.setCurrentDate("امروز یکشنبه 23 تیر می باشد  ");
+            detailMainInfo.setCurrentDate(" "+Utility.ShowTimeFarsi(infos.get(infos.size()-1)));
 
             return new OperationResult<DetailMainInfo>(null,true,null,detailMainInfo,null);
         }catch (Exception e){

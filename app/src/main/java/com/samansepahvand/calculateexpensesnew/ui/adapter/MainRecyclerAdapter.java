@@ -135,7 +135,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     class ItemBaseViewHolder extends RecyclerView.ViewHolder {
         View mViewContent;
         View mActionContainer;
-        private TextView txtTitle, txtPrice, txtDate, txtRow;
+        private TextView txtTitle, txtPrice, txtDate, txtRow,txtEstimateTime;
 
         private FrameLayout root;
 
@@ -151,7 +151,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             txtTitle = itemView.findViewById(R.id.item_txt_title);
             txtPrice = itemView.findViewById(R.id.item_txt_price);
             txtRow = itemView.findViewById(R.id.item_txt_row);
+            txtEstimateTime=itemView.findViewById(R.id.item_txt_estimate_date);
             root = itemView.findViewById(R.id.root);
+
+
             mViewContent = itemView.findViewById(R.id.view_list_main_content);
             mActionContainer = itemView.findViewById(R.id.view_list_repo_action_container);
 
@@ -172,8 +175,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 mActionContainer.setVisibility(View.INVISIBLE);
                // root.setSelected(true);
             } else {
+
+                txtEstimateTime.setText(info.getEstimateDate());
                 txtRow.setText(String.valueOf(position + 1));
-                txtDate.setText("تاریخ ثبت : " + info.getDate());
+                txtDate.setText("تاریخ ثبت : " + info.getFarsiDate());
                 txtTitle.setText(info.getTitle());
                 String str = "<font color=red><b>" +
                         splitDigits(info.getPrice()) +

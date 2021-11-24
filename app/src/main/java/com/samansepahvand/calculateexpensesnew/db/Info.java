@@ -16,6 +16,11 @@ public class Info extends Model implements Serializable {
     public static final String PRICE = "price";
     public static final String DATE = "date";
 
+    public static final String DATE_FARSI = "farsiDate";
+    public static final String DATE_ENGLISH= "englishDate";
+
+    public static final String DATE_ESTIMATE= "estimateDate";
+
 
     @Column(name = TITLE)
     String  title;
@@ -26,6 +31,40 @@ public class Info extends Model implements Serializable {
     @Column(name = DATE)
     String  date;
 
+    @Column(name = DATE_FARSI)
+    String  farsiDate;
+
+    @Column(name = DATE_ENGLISH)
+    String  englishDate;
+
+
+    @Column(name = DATE_ESTIMATE)
+    String  estimateDate;
+
+
+    public String getEstimateDate() {
+        return estimateDate;
+    }
+
+    public void setEstimateDate(String estimateDate) {
+        this.estimateDate = estimateDate;
+    }
+
+    public String getFarsiDate() {
+        return farsiDate;
+    }
+
+    public void setFarsiDate(String farsiDate) {
+        this.farsiDate = farsiDate;
+    }
+
+    public String getEnglishDate() {
+        return englishDate;
+    }
+
+    public void setEnglishDate(String englishDate) {
+        this.englishDate = englishDate;
+    }
 
     public String getTitle() {
         return title;
@@ -50,4 +89,8 @@ public class Info extends Model implements Serializable {
     public void setDate(String date) {
         this.date = date;
     }
+
+
+
+
 }
