@@ -93,6 +93,7 @@ public class InfoRepository {
             List<Info> infos = new Select().from(Info.class)
                     .orderBy("id desc")
                     .execute();
+
             if (infos.size() > 0) {
                 for (Info info : infos) {
                     totalPrice += info.getPrice();
