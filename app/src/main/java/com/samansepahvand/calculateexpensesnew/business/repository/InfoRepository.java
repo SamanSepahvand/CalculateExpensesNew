@@ -11,6 +11,8 @@ import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
 
 
 import java.text.DateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -89,19 +91,17 @@ public class InfoRepository {
         try {
             int totalPrice = 0;
             List<Info> infos = new Select().from(Info.class)
-                    .orderBy(Info.DATE+" desc")
+                    .orderBy("id desc")
                     .execute();
             if (infos.size() > 0) {
                 for (Info info : infos) {
                     totalPrice += info.getPrice();
                     info.setFarsiDate(Utility.ShowTimeFarsi(info));
-
                     info.setEstimateDate(Utility.SeparateTimeForEstimate(info.getEnglishDate()).getEstimatedTime()+" روز پیش ");
-
-
-
                 }
-                return new OperationResult<>(String.valueOf(totalPrice), true, null, null, infos);
+
+
+                return new OperationResult<>(String.valueOf(totalPrice), true, null, null, Utility.OrderByDateDesc(infos));
             }
             return new OperationResult<>("فاکتوری برای نمایش وجود ندارد", false, null);
         } catch (

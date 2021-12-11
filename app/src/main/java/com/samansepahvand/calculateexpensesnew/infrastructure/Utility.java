@@ -18,7 +18,10 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class Utility {
@@ -76,6 +79,21 @@ public class Utility {
     }
 
 
+    public static List<Info>
+    OrderByDateDesc(List<Info> myList ){
+        Collections.sort(myList, new Comparator<Info>(){
+            public int compare(Info obj1, Info obj2) {
+                // ## Ascending order
+//                return obj1.getProductCode().compareToIgnoreCase(obj2.getProductCode); // To compare string values
+              //  return Integer.valueOf(obj1.getId()+"").compareTo(Integer.valueOf(obj2.getId()+"")); // To compare integer values
+                // ## Descending order
+                 return obj2.getId().intValue()+"".compareToIgnoreCase(obj1.getId().intValue()+""); // To compare string values
+                // return Integer.valueOf(obj2.empId).compareTo(Integer.valueOf(obj1.empId)); // To compare integer values
+            }
+        });
+
+        return  myList;
+    }
 
 
 
