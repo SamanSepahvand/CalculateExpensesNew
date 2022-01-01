@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 public class InfoRepository {
+    
     private static final String TAG = "InfoRepository";
     private static InfoRepository infoRepository = null;
     private Context context;
@@ -27,7 +28,9 @@ public class InfoRepository {
 
 
     public static InfoRepository getInstance() {
+
         if (infoRepository == null) {
+
             synchronized (InfoRepository.class) {
                 if (infoRepository == null) {
                     infoRepository = new InfoRepository();
@@ -44,6 +47,7 @@ public class InfoRepository {
             if (id!=0) {
                 Info infoUpdate = new Select().from(Info.class).where("Id=?", id).executeSingle();
                 if (infoUpdate != null) {
+
                     infoUpdate.setPrice(info.getPrice());
                     infoUpdate.setDate(info.getDate());
                     infoUpdate.setTitle(info.getTitle());
