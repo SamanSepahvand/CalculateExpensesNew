@@ -33,7 +33,7 @@ public class InfoRepository {
 
             synchronized (InfoRepository.class) {
                 if (infoRepository == null) {
-                    infoRepository = new InfoRepository();
+                   infoRepository = new InfoRepository();
                 }
             }
         }

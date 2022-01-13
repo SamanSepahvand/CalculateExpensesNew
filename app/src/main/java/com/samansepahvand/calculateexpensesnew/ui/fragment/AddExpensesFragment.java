@@ -13,10 +13,12 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,11 +29,15 @@ import com.samansepahvand.calculateexpensesnew.business.metamodel.ResultMessage;
 import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
 import com.samansepahvand.calculateexpensesnew.db.Info;
 import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
+import com.samansepahvand.calculateexpensesnew.infrastructure.expandableListView.Group;
+import com.samansepahvand.calculateexpensesnew.ui.adapter.MyExpandableListAdapter;
+import com.samansepahvand.calculateexpensesnew.ui.modal.DialogPriceType;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import ir.hamsaa.persiandatepicker.PersianDatePickerDialog;
 import ir.hamsaa.persiandatepicker.api.PersianPickerDate;
@@ -78,11 +84,10 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
 
     private TextView txtDateChoose;
     private EditText txtInvoiceShow;
+private TextView txtPriceType;
 
 
     private String date, time, invoiceTitle, invoicePrice;
-
-
 
 
     public AddExpensesFragment() {
@@ -130,6 +135,9 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
         edtPrice = view.findViewById(R.id.edt_price);
         txtDateChoose = view.findViewById(R.id.txt_date_chosse);
         txtInvoiceShow = view.findViewById(R.id.txt_invoice_show);
+        txtPriceType = view.findViewById(R.id.txt_price_type);
+
+
         edtTitle = view.findViewById(R.id.edt_name);
 
         Bundle bundle = getArguments();
@@ -137,7 +145,7 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
             infoData = (Info) bundle.getSerializable("Info");
             if (infoData != null) {
 
-                StateLive(infoData.getTitle(), infoData.getPrice()+"");
+                StateLive(infoData.getTitle(), infoData.getPrice() + "");
 
                 edtPrice.setText(infoData.getPrice() + "");
                 edtTitle.setText(infoData.getTitle());
@@ -154,13 +162,12 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
         //Onclick Response in Android we need this problem, to silver;
         imgInsertBack.setOnClickListener(this);
         txtDateChoose.setOnClickListener(this);
+        txtPriceType.setOnClickListener(this);
 
         PersianDataPicker();
 
 
     }
-
-
 
 
     private void EdtOnline() {
@@ -169,7 +176,7 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
         txtInvoiceShow.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-             //   OnlineInvoices();
+                //   OnlineInvoices();
 
             }
 
@@ -275,6 +282,11 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
             case R.id.txt_date_chosse:
                 PersianDataPicker();
                 break;
+
+            case R.id.txt_price_type:
+                OpenPriceTypeDialog();
+                break;
+
         }
 
     }
@@ -336,8 +348,7 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
     }
 
 
-
-    private void OnlineInvoices(){
+    private void OnlineInvoices() {
 
         Spanned strHtml = Html.fromHtml(" شما در تاریخ  " + "<font color='red'>"
                 + date + "</font>" + " مبلغ  " + "<font color='red'>" + invoicePrice
@@ -357,16 +368,23 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
         OperationResult result = InfoRepository.getInstance().AddPrice(info, id);
         if (result.IsSuccess) {
             if (!keyUpdate)
-            DialogSuccess("فاکتور مورد نظر با موفقیت اضافه شد.",getContext());
+                DialogSuccess("فاکتور مورد نظر با موفقیت اضافه شد.", getContext());
             else
-            DialogSuccess("ویرایش فاکتور مورد نظر با موفقیت انجام شد.",getContext());
+                DialogSuccess("ویرایش فاکتور مورد نظر با موفقیت انجام شد.", getContext());
             navController.navigate(R.id.action_addExpensesFragment_to_mainFragment);
         } else {
-            DialogFailed(ResultMessage.ErrorMessage,getContext());
+            DialogFailed(ResultMessage.ErrorMessage, getContext());
 
         }
 
     }
+
+    private void OpenPriceTypeDialog(){
+        DialogPriceType dialogPriceType=new DialogPriceType(getActivity(),true,true);
+        dialogPriceType.setCancelable(false);
+        dialogPriceType.show();
+    }
+
 
 
 }

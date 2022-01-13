@@ -18,8 +18,17 @@ public class Info extends Model implements Serializable {
 
     public static final String DATE_FARSI = "farsiDate";
     public static final String DATE_ENGLISH= "englishDate";
-
     public static final String DATE_ESTIMATE= "estimateDate";
+
+
+    public static final String PRICE_TYPE= "priceType";
+    public static final String CreationDate = "CreationDate";
+    public static final String CreatorUserId = "CreatorUserId";
+
+
+
+
+
 
 
     @Column(name = TITLE)
@@ -41,6 +50,41 @@ public class Info extends Model implements Serializable {
     @Column(name = DATE_ESTIMATE)
     String  estimateDate;
 
+
+    @Column(name = PRICE_TYPE)
+    int  priceType;
+
+
+    @Column(name = CreatorUserId)
+    int  creatorUserId;
+
+    @Column(name = CreationDate)
+    String  creationDate;
+
+
+    public int getPriceType() {
+        return priceType;
+    }
+
+    public void setPriceType(int priceType) {
+        this.priceType = priceType;
+    }
+
+    public int getCreatorUserId() {
+        return creatorUserId;
+    }
+
+    public void setCreatorUserId(int creatorUserId) {
+        this.creatorUserId = creatorUserId;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
 
     public String getEstimateDate() {
         return estimateDate;

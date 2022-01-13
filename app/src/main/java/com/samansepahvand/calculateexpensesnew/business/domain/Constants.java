@@ -55,4 +55,73 @@ public class Constants {
 
 
 
+    public static String[] PriceTypeHeader = new String[]{
+
+            "خرید",
+            "اجاره",
+            "ماشین",
+            "خوراک",
+            "رفت و آمد",
+            "سرگرمی",
+            "قبوض"
+
+    };
+
+
+    public static String[] CarPriceTypeItem = new String[]{
+            "بنزین",
+            "بیمه",
+            "جریمه",
+            "تعمیرگاه"
+    };
+
+
+
+    public static String[] BuyPriceTypeItem = new String[]{
+            "لباس",
+            "هدیه",
+            "کارت شارژ",
+            "اینترنت",
+            "دارو",
+            "کتاب",
+            "کالا"
+    };
+
+
+
+    public static String[] RentPriceTypeItem = new String[]{
+            "خانه",
+            "شرکت",
+            "مغازه"
+    };
+
+    public static String[] FoodPriceTypeItem = new String[]{
+            "رستوران",
+            "کافی شاپ",
+            "آنلاین شاپینگ"
+    };
+
+
+    public static String[] CommutingPriceTypeItem = new String[]{
+            "اتوبوس",
+            "تاکسی",
+            "مترو"
+    };
+
+    public static String[] EntertainmentPriceTypeItem = new String[]{
+            "شهربازی",
+            "سینما",
+            "تئاتر",
+            "کنسرت"
+    };
+
+    public static String[] BillsPriceTypeItem = new String[]{
+            "موبایل",
+            "تلفن",
+            "برق",
+            "آب"
+    };
+
+
+
 }
