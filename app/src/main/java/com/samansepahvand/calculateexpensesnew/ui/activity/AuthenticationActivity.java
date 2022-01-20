@@ -29,6 +29,7 @@ import com.samansepahvand.calculateexpensesnew.business.domain.Constants;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.UserLoginParam;
 import com.samansepahvand.calculateexpensesnew.business.repository.AccountRepository;
+import com.samansepahvand.calculateexpensesnew.business.repository.PriceTypeRepository;
 import com.samansepahvand.calculateexpensesnew.db.Account;
 import com.samansepahvand.calculateexpensesnew.ui.modal.AlertDialogModal;
 
@@ -83,7 +84,11 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         txtForgetPassword.setOnClickListener(this);
 
         AutoAuthentication();
+        FillPriceTypeCategory();
+    }
 
+    private void FillPriceTypeCategory() {
+     PriceTypeRepository.getInstance().AddDefaultPriceType();
     }
 
     private void AutoAuthentication() {
@@ -92,8 +97,8 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
 
         if (result.Item != null && !result.Item.getUserName().isEmpty()) {
             edtUserName.setText(result.Item.getUserName());
-        }else {
-            startActivity(new Intent(AuthenticationActivity.this,SignUpActivity.class));
+        } else {
+            startActivity(new Intent(AuthenticationActivity.this, SignUpActivity.class));
         }
     }
 
@@ -113,7 +118,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             startActivity(new Intent(AuthenticationActivity.this, MainActivity.class));
             finish();
         } else {
-            errorEmptyInput(result.Message,true);
+            errorEmptyInput(result.Message, true);
         }
 
 
@@ -173,7 +178,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
 
 
                 if (isEmpty(tempUserName, tempPassword)) {
-                    errorEmptyInput(getString(R.string.UserNamePasswordRequired),false);
+                    errorEmptyInput(getString(R.string.UserNamePasswordRequired), false);
                 } else {
                     tempDisableButton(view);
                     Login();
@@ -192,9 +197,9 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         }
     }
 
-    private void errorEmptyInput(String message,boolean isWrong) {
+    private void errorEmptyInput(String message, boolean isWrong) {
         final AlertDialogModal modal2 = new AlertDialogModal(this, true, false);
-        modal2.setImageTypeCustom(isWrong ? Constants.TypeImageAlertDialog[2]:Constants.TypeImageAlertDialog[1]);
+        modal2.setImageTypeCustom(isWrong ? Constants.TypeImageAlertDialog[2] : Constants.TypeImageAlertDialog[1]);
         modal2.setButtonConfirmCustom("باشه !", isWrong ? Constants.TypeButtonStyleAlertDialog[2] : Constants.TypeButtonStyleAlertDialog[1]);
         modal2.setTextContent(message);
         modal2.setAcceptButton(new AlertDialogModal.OnAcceptInterface() {
@@ -311,7 +316,6 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
 
         }
     }
-
 
 
 }

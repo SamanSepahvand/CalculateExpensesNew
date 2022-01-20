@@ -22,12 +22,19 @@ public class UserInformations {
 //        password = ppassword;
 //
 //    }
-    public static void SetValues(String puserName, String passwordd, String fullNames){
+    public static void SetValues(int userIdd,String puserName, String passwordd, String fullNames){
         userName = puserName;
         password = passwordd;
         fullName=fullNames;
-    }
+        userId=userIdd;
 
+    }
+    public static int getUserId(){
+        if(userId == 0){
+            AccountRepository.FillShared(AccountRepository.getInstance().getAccount());
+        }
+        return userId;
+    }
 
     public static String getUserName(){
         if(userName == null){

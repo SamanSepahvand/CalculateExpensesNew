@@ -6,19 +6,25 @@ import androidx.navigation.Navigation;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.samansepahvand.calculateexpensesnew.R;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
 import com.samansepahvand.calculateexpensesnew.db.Info;
+import com.samansepahvand.calculateexpensesnew.db.PriceType;
 import com.samansepahvand.calculateexpensesnew.helper.interfaces.ActionInfo;
+import com.samansepahvand.calculateexpensesnew.ui.adapter.MyExpandableListAdapter;
+import com.samansepahvand.calculateexpensesnew.ui.fragment.AddExpensesFragmentDirections;
 import com.samansepahvand.calculateexpensesnew.ui.fragment.ListExpensesFragmentDirections;
+import com.samansepahvand.calculateexpensesnew.ui.fragment.MainFragmentDirections;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity implements ActionInfo {
 
+    private static final String TAG = "MainActivity";
     private NavController navController;
 
     @Override
@@ -30,8 +36,6 @@ public class MainActivity extends AppCompatActivity implements ActionInfo {
     }
 
     private void initView() {
-
-
 
     }
 
@@ -55,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements ActionInfo {
     @Override
     public void actionDelete(Info info) {
 
-
-
     }
+
+
+
 }

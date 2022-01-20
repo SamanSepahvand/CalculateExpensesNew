@@ -17,6 +17,9 @@
             android:id="@+id/action_mainFragment_to_listExpensesFragment"
             app:destination="@id/listExpensesFragment"
             app:enterAnim="@android:anim/slide_in_left" />
+
+
+
     </fragment>
     <fragment
         android:id="@+id/addExpensesFragment"

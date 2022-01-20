@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.activeandroid.util.SQLiteUtils;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.DetailMainInfo;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.InfoMetaModel;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.db.Info;
 import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
@@ -91,22 +93,36 @@ public class InfoRepository {
 
     }
 
-    public OperationResult<Info> GetInfo() {
+    public OperationResult<InfoMetaModel> GetInfo() {
         try {
             int totalPrice = 0;
-            List<Info> infos = new Select().from(Info.class)
-                    .orderBy("id desc")
-                    .execute();
 
-            if (infos.size() > 0) {
-                for (Info info : infos) {
+//            List<Info> infos = new Select().from(Info.class)
+//                    .orderBy("id desc")
+//                    .execute();
+
+
+
+            String query="select * from info  i " +
+                    " left join priceType t on t.PriceTypeItemId=i.priceTypeIdItem and t.PriceTypeId=i.PriceTypeId  " +
+                    " order by id desc";
+
+
+            List<InfoMetaModel> metaModels= SQLiteUtils.rawQuery(InfoMetaModel.class,query,null);
+
+
+
+            if (metaModels.size() > 0) {
+                for (InfoMetaModel info : metaModels) {
                     totalPrice += info.getPrice();
-                    info.setFarsiDate(Utility.ShowTimeFarsi(info));
+                    info.setFarsiDate(Utility.ShowTimeFarsiMeta(info));
                     info.setEstimateDate(Utility.SeparateTimeForEstimate(info.getEnglishDate()).getEstimatedTime()+" روز پیش ");
+
+
                 }
 
 
-                return new OperationResult<>(String.valueOf(totalPrice), true, null, null, Utility.OrderByDateDesc(infos));
+                return new OperationResult<>(String.valueOf(totalPrice), true, null, null, Utility.OrderByDateDescMeta(metaModels));
             }
             return new OperationResult<>("فاکتوری برای نمایش وجود ندارد", false, null);
         } catch (
@@ -155,5 +171,27 @@ public class InfoRepository {
 
         }
     }
+
+    public OperationResult<Info> GetInfoByMeta(InfoMetaModel infoMetaModel,String typeAction) {
+
+        try {
+            Info info=   new Select().from(Info.class).where("Id=?", infoMetaModel.getId()).executeSingle();
+            if (typeAction.equals("Show")){
+                return new OperationResult<>(null, true, null,info,null);
+            }else if (typeAction.equals("Delete")){
+                DeleteItem(info);
+                return new OperationResult<>(null, true, null,info,null);
+            }else{
+                return new OperationResult<>("خطا در  بازیابی  !", false,null);
+            }
+
+        } catch (Exception e) {
+            return new OperationResult<>("خطا در  بازیابی فاکتور !", false, e.getMessage());
+        }
+
+    }
+
+
+
 
 }

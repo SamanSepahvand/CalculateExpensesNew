@@ -2,25 +2,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="40dp"
-    android:clickable="true"
-    android:orientation="vertical"
-    android:paddingLeft="40dp">
+    android:gravity="right"
+    android:layout_marginRight="10dp"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_gravity="right"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_baseline_arrow_drop_down_24"
+        android:drawableRight="@drawable/ic_baseline_arrow_left_24"
         android:drawablePadding="5dp"
-        android:gravity="center_vertical"
+        android:layout_marginRight="20dp"
+        android:gravity="center_vertical|right"
         android:text="hello_world"
-        android:textSize="14sp"
+        android:textSize="15sp"
+        android:layout_margin="5dp"
         android:textStyle="bold" >
     </TextView>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/black" />
+
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="20dp"
+
+        android:background="#AFAFAF" />
 
 </LinearLayout>

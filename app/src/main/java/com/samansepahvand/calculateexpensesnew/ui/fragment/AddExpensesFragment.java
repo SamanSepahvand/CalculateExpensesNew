@@ -1,5 +1,7 @@
 package com.samansepahvand.calculateexpensesnew.ui.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -13,12 +15,11 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextWatcher;
-import android.util.SparseArray;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,18 +27,20 @@ import android.widget.Toast;
 import com.samansepahvand.calculateexpensesnew.R;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.ResultMessage;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.UserInformations;
 import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
 import com.samansepahvand.calculateexpensesnew.db.Info;
+import com.samansepahvand.calculateexpensesnew.db.PriceType;
 import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
-import com.samansepahvand.calculateexpensesnew.infrastructure.expandableListView.Group;
 import com.samansepahvand.calculateexpensesnew.ui.adapter.MyExpandableListAdapter;
-import com.samansepahvand.calculateexpensesnew.ui.modal.DialogPriceType;
+import com.samansepahvand.calculateexpensesnew.ui.dialog.DialogFragmentPriceType;
+import com.samansepahvand.calculateexpensesnew.ui.dialog.DialogFragmentPriceTypeNew;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import ir.hamsaa.persiandatepicker.PersianDatePickerDialog;
 import ir.hamsaa.persiandatepicker.api.PersianPickerDate;
@@ -52,7 +55,7 @@ import static com.samansepahvand.calculateexpensesnew.infrastructure.Utility.Dia
  * Use the {@link AddExpensesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddExpensesFragment extends Fragment implements View.OnClickListener {
+public class AddExpensesFragment extends Fragment implements View.OnClickListener, DialogFragmentPriceType.IPriceTypeNew, View.OnLongClickListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -65,7 +68,6 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
     //component
     private EditText edtTitle, edtPrice;
     private TextView txtDate, txtCurrentMoney;
-
 
     private ImageView imgInsertBack;
     private String persianTime;
@@ -84,11 +86,19 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
 
     private TextView txtDateChoose;
     private EditText txtInvoiceShow;
-private TextView txtPriceType;
+    private TextView txtPriceType;
 
 
     private String date, time, invoiceTitle, invoicePrice;
 
+    private static final String TAG = "AddExpensesFragment";
+
+
+    private SharedPreferences preferences;
+
+    private TextView txtPriceTypeResult;
+
+    private  PriceType priceType =new PriceType();
 
     public AddExpensesFragment() {
         // Required empty public constructor
@@ -124,6 +134,7 @@ private TextView txtPriceType;
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         intiView(view);
+        preferences = getActivity().getSharedPreferences("Pref", Context.MODE_PRIVATE);
 
     }
 
@@ -136,6 +147,8 @@ private TextView txtPriceType;
         txtDateChoose = view.findViewById(R.id.txt_date_chosse);
         txtInvoiceShow = view.findViewById(R.id.txt_invoice_show);
         txtPriceType = view.findViewById(R.id.txt_price_type);
+
+        txtPriceTypeResult = view.findViewById(R.id.txt_price_type_result);
 
 
         edtTitle = view.findViewById(R.id.edt_name);
@@ -164,6 +177,7 @@ private TextView txtPriceType;
         txtDateChoose.setOnClickListener(this);
         txtPriceType.setOnClickListener(this);
 
+        txtPriceTypeResult.setOnLongClickListener(this);
         PersianDataPicker();
 
 
@@ -271,6 +285,8 @@ private TextView txtPriceType;
             case R.id.img_back:
                 String title = edtTitle.getText().toString();
                 String price = edtPrice.getText().toString();
+
+
                 if (validate(title, price)) {
                     AddNewPrice();
                 } else {
@@ -285,6 +301,7 @@ private TextView txtPriceType;
 
             case R.id.txt_price_type:
                 OpenPriceTypeDialog();
+
                 break;
 
         }
@@ -365,6 +382,26 @@ private TextView txtPriceType;
         info.setTitle(edtTitle.getText().toString());
         info.setPrice(Utility.GetPrice(edtPrice.getText().toString()));
         info.setDate(keyUpdate ? infoData.getDate() : null);
+
+
+        if (!keyUpdate) {
+
+            info.setPriceTypeId(Integer.parseInt(priceType.getPriceTypeId()));
+            info.setPriceTypeIdItem(priceType.getPriceTypeItemId());
+            info.setCreatorUserId(priceType.getPriceCreatorUserId());
+            info.setCreationDate(priceType.getPriceCreationDate());
+
+        }else{
+
+            info.setPriceTypeId(infoData.getPriceTypeId());
+            info.setPriceTypeIdItem(infoData.getPriceTypeIdItem());
+            info.setCreatorUserId(infoData.getCreatorUserId());
+            info.setCreationDate(infoData.getCreationDate());
+        }
+
+
+
+
         OperationResult result = InfoRepository.getInstance().AddPrice(info, id);
         if (result.IsSuccess) {
             if (!keyUpdate)
@@ -379,12 +416,60 @@ private TextView txtPriceType;
 
     }
 
-    private void OpenPriceTypeDialog(){
-        DialogPriceType dialogPriceType=new DialogPriceType(getActivity(),true,true);
-        dialogPriceType.setCancelable(false);
-        dialogPriceType.show();
+
+    private void OpenPriceTypeDialog() {
+        DialogFragmentPriceType dialog = new DialogFragmentPriceType();
+        dialog.setTargetFragment(AddExpensesFragment.this, 1);
+        dialog.show(getFragmentManager(), getString(R.string.app_name));
+
+
     }
 
 
+    @Override
+    public void GetPrice() {
 
+        if (
+                preferences.contains("getPriceTypeItemId" )
+                && preferences.contains("getPriceTypeName")
+                && preferences.contains("getPriceTypeId") ) {
+
+            priceType=new PriceType();
+            priceType.setPriceTypeItemId(Integer.parseInt(preferences.getString("getPriceTypeItemId", "0")));
+            priceType.setPriceTypeId(preferences.getString("getPriceTypeId", ""));
+            priceType.setPriceTypeName(preferences.getString("getPriceTypeName", ""));
+
+            priceType.setPriceCreatorUserId(UserInformations.getUserId());
+            Calendar calendar=Calendar.getInstance();
+            priceType.setPriceCreationDate(calendar.getTime()+"");
+
+
+            fillPriceType(priceType);
+        }
+    }
+
+    private void fillPriceType(PriceType priceType) {
+        if (priceType != null) {
+            txtPriceTypeResult.setVisibility(View.VISIBLE);
+            txtPriceTypeResult.setText(priceType.getPriceTypeName() + "");
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()){
+            case R.id.txt_price_type_result:
+                removePriceType();
+                break;
+        }
+        return false;
+    }
+
+    private  void removePriceType(){
+
+
+        txtPriceTypeResult.setVisibility(View.GONE);
+        txtPriceTypeResult.setText("");
+
+    }
 }

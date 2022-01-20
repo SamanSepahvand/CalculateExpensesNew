@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 import com.samansepahvand.calculateexpensesnew.R;
 import com.samansepahvand.calculateexpensesnew.business.domain.Constants;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.InfoMetaModel;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.UserInformations;
 import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
@@ -121,7 +122,7 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
         txtFullName.setText(UserInformations.getFullName());
     }
 
-    private void SupplierProductDeliveryData(final List<Info> items) {
+    private void SupplierProductDeliveryData(final List<InfoMetaModel> items) {
 
         items.add(DammyData());
         txtInvoiceCount.setText("تعداد: "+(items.size()-1)+"");
@@ -133,8 +134,8 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
     }
 
 
-    private Info DammyData() {
-        Info deliveryMetaModel = new Info();
+    private InfoMetaModel DammyData() {
+        InfoMetaModel deliveryMetaModel = new InfoMetaModel();
         deliveryMetaModel.setDate("");
         deliveryMetaModel.setPrice(0);
         deliveryMetaModel.setTitle("633325632");
@@ -173,9 +174,9 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
     @Override
     public boolean onQueryTextChange(String s) {
         int countShow = 0;
-        OperationResult<Info> result = InfoRepository.getInstance().GetInfo();
-        List<Info> newList = new ArrayList<>();
-        for (Info info : result.Items ) {
+        OperationResult<InfoMetaModel> result = InfoRepository.getInstance().GetInfo();
+        List<InfoMetaModel> newList = new ArrayList<>();
+        for (InfoMetaModel info : result.Items ) {
             if (info.getTitle().toLowerCase().contains(s)) {
                 newList.add(info);
             } else {

@@ -1,37 +1,26 @@
-package com.samansepahvand.calculateexpensesnew.db;
+package com.samansepahvand.calculateexpensesnew.business.metamodel;
+
+import static com.samansepahvand.calculateexpensesnew.db.Info.*;
+import static com.samansepahvand.calculateexpensesnew.db.PriceType.*;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.samansepahvand.calculateexpensesnew.db.PriceType;
 
 import java.io.Serializable;
 
 
-@Table(name = Info.TABLE_NAME)
-public class Info extends Model implements Serializable {
-
-    public static final String TABLE_NAME = "Info";
-
-    public static final String TITLE = "title";
-    public static final String PRICE = "price";
-    public static final String DATE = "date";
-
-    public static final String DATE_FARSI = "farsiDate";
-    public static final String DATE_ENGLISH= "englishDate";
-    public static final String DATE_ESTIMATE= "estimateDate";
-
-
-    public static final String PRICE_TYPE_ID= "priceTypeId";
-    public static final String PRICE_TYPE_ITEM= "priceTypeIdItem";
-
-
-    public static final String CreationDate = "CreationDate";
-    public static final String CreatorUserId = "CreatorUserId";
+public class InfoMetaModel extends Model implements Serializable {
 
 
 
 
+    @Column(name = PriceTypeName)
+    String  priceTypeName;
 
+    @Column(name = PriceTypeItemName)
+    String  priceTypeItemName;
 
 
     @Column(name = TITLE)
@@ -67,6 +56,24 @@ public class Info extends Model implements Serializable {
     String  creationDate;
 
 
+
+
+
+    public String getPriceTypeName() {
+        return priceTypeName;
+    }
+
+    public void setPriceTypeName(String priceTypeName) {
+        this.priceTypeName = priceTypeName;
+    }
+
+    public String getPriceTypeItemName() {
+        return priceTypeItemName;
+    }
+
+    public void setPriceTypeItemName(String priceTypeItemName) {
+        this.priceTypeItemName = priceTypeItemName;
+    }
 
     public int getPriceTypeId() {
         return priceTypeId;

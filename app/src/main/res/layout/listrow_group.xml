@@ -1,17 +1,20 @@
 <CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/textView1"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:layout_marginLeft="8dp"
     android:drawableRight="@mipmap/ic_launcher"
-    android:gravity="left|center_vertical"
-    android:paddingLeft="32dp"
+    android:gravity="center_vertical|right"
     android:paddingTop="8dp"
     android:text="Test"
     android:textSize="14sp"
-    android:textAlignment="textEnd"
+    android:drawablePadding="10dp"
+    android:textAlignment="gravity"
     android:textStyle="bold"
-    tools:ignore="RtlCompat" />
+    android:textDirection="rtl" />
+
+
+
+
 
 

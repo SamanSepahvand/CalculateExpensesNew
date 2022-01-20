@@ -97,7 +97,7 @@ public class AccountRepository {
     public static void FillShared(Account ac) {
         if (ac == null) return;
         Log.e("TAG", "FillShared: "+"load" );
-        UserInformations.SetValues( ac.getUserName(), ac.getPassword(),ac.getFirstName()+" "+ac.getLastName());
+        UserInformations.SetValues(ac.getId().intValue(), ac.getUserName(), ac.getPassword(),ac.getFirstName()+" "+ac.getLastName());
     }
 
 

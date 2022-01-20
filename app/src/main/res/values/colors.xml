@@ -7,7 +7,7 @@
     <color name="colorPrimaryDark2">#6D0535</color>
     <color name="colorSecond">@color/green</color>
     <color name="colorThird">@color/yellow</color>
-    <color name="colorFourth">@color/orange</color>
+    <color name="colorFourth">@color/custom_showcase_bg</color>
     <color name="colorFifth">@color/gray</color>
 
     <color name="cherry">#8b074f</color>

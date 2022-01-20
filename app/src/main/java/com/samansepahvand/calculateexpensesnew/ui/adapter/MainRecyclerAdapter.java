@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.loopeer.itemtouchhelperextension.Extension;
 import com.samansepahvand.calculateexpensesnew.R;
 import com.samansepahvand.calculateexpensesnew.business.domain.Constants;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.InfoMetaModel;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.ResultMessage;
 import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
@@ -36,7 +37,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public static final int ITEM_TYPE_RECYCLER_WIDTH = 1000;
     public static final int ITEM_TYPE_ACTION_WIDTH = 1001;
     public static final int ITEM_TYPE_ACTION_WIDTH_NO_SPRING = 1002;
-    private List<Info> mDatas;
+    private List<InfoMetaModel> mDatas;
     private Context mContext;
 
 
@@ -48,13 +49,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         actionInfo = (ActionInfo) context;
     }
 
-    public void setDatas(List<Info> datas) {
+    public void setDatas(List<InfoMetaModel> datas) {
         mDatas.clear();
         if (datas != null)
             mDatas.addAll(datas);
     }
 
-    public void updateData(List<Info> datas) {
+    public void updateData(List<InfoMetaModel> datas) {
         setDatas(datas);
         notifyDataSetChanged();
     }
@@ -80,7 +81,17 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        actionInfo.actionInfo(mDatas.get(position));
+
+
+
+
+
+                        OperationResult<Info> result = InfoRepository.getInstance().GetInfoByMeta(mDatas.get(position),"Show");
+                        actionInfo.actionInfo(result.Item);
+
+
+
+
 
                     }
                 }
@@ -90,7 +101,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        OperationResult result = InfoRepository.getInstance().DeleteItem(mDatas.get(position));
+
+                        OperationResult<Info> result = InfoRepository.getInstance().GetInfoByMeta(mDatas.get(position),"Delete");
+
                         if (result.IsSuccess) {
                             mDatas.remove(position);
                             notifyItemRemoved(position);
@@ -135,7 +148,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     class ItemBaseViewHolder extends RecyclerView.ViewHolder {
         View mViewContent;
         View mActionContainer;
-        private TextView txtTitle, txtPrice, txtDate, txtRow,txtEstimateTime;
+        private TextView txtTitle, txtPrice, txtDate, txtRow,txtEstimateTime,txtPriceType;
 
         private FrameLayout root;
 
@@ -153,6 +166,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             txtRow = itemView.findViewById(R.id.item_txt_row);
             txtEstimateTime=itemView.findViewById(R.id.item_txt_estimate_date);
             root = itemView.findViewById(R.id.root);
+            txtPriceType =itemView.findViewById(R.id.txt_price_type);
+
 
 
             mViewContent = itemView.findViewById(R.id.view_list_main_content);
@@ -161,13 +176,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mActionContainer.setSelected(true);
         }
 
-        public void bind(Info testModel) {
+        public void bind(InfoMetaModel testModel) {
             setProductDeliveryItems(testModel, getAdapterPosition());
 
         }
 
 
-        private void setProductDeliveryItems(Info info, int position) {
+        private void setProductDeliveryItems(InfoMetaModel info, int position) {
 
             if (info.getTitle().equals("633325632")) {
                 root.setVisibility(View.INVISIBLE);
@@ -186,6 +201,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         + "  ریال ";
                 Spanned strHtml = Html.fromHtml(str);
                 txtPrice.setText(strHtml);
+
+                txtPriceType.setText(info.getPriceTypeName());
 
 
            }

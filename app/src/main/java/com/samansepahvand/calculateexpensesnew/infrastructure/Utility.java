@@ -8,6 +8,7 @@ import android.widget.EditText;
 import com.google.gson.internal.$Gson$Types;
 import com.samansepahvand.calculateexpensesnew.R;
 import com.samansepahvand.calculateexpensesnew.business.domain.Constants;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.InfoMetaModel;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.TimeMetaModel;
 import com.samansepahvand.calculateexpensesnew.db.Info;
 import com.samansepahvand.calculateexpensesnew.helper.DateConverter;
@@ -76,6 +77,31 @@ public class Utility {
         return strHtml.toString();
 
 
+    }
+    public static String ShowTimeFarsiMeta(InfoMetaModel config){
+        //GetFarsiDate
+        String[] farsiDate =  config.getFarsiDate().split(" ");
+        //Remove sec in Time
+        String[] time =  config.getFarsiDate().split(" ")[1].split(":");
+        Spanned strHtml = Html.fromHtml((config.getEnglishDate() != null ? " <font color=#2e9699> <b> " + Utility.getDayName(config.getEnglishDate()) + farsiDate[0] + " ساعت:  " + time[0]+":"+time[1]+ " </b></font>" : "زمان نامشخص می باشد ! "));
+        return strHtml.toString();
+
+
+    }
+    public static List<InfoMetaModel>
+    OrderByDateDescMeta(List<InfoMetaModel> myList ){
+        Collections.sort(myList, new Comparator<InfoMetaModel>(){
+            public int compare(InfoMetaModel obj1, InfoMetaModel obj2) {
+                // ## Ascending order
+//                return obj1.getProductCode().compareToIgnoreCase(obj2.getProductCode); // To compare string values
+                //  return Integer.valueOf(obj1.getId()+"").compareTo(Integer.valueOf(obj2.getId()+"")); // To compare integer values
+                // ## Descending order
+                return obj2.getId().intValue()+"".compareToIgnoreCase(obj1.getId().intValue()+""); // To compare string values
+                // return Integer.valueOf(obj2.empId).compareTo(Integer.valueOf(obj1.empId)); // To compare integer values
+            }
+        });
+
+        return  myList;
     }
 
 

@@ -1,5 +1,7 @@
 package com.samansepahvand.calculateexpensesnew.db;
 
+import android.os.Parcelable;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -8,23 +10,30 @@ import java.io.Serializable;
 
 
 @Table(name = PriceType.TABLE_NAME)
-public class PriceType extends Model implements Serializable {
+public class PriceType extends Model  implements  Serializable{
 
     public static final String TABLE_NAME = "PriceType";
 
     public static final String PriceTypeId = "PriceTypeId"; // header
     public static final String PriceTypeItemId = "PriceTypeItemId"; // itemId
     public static final String PriceTypeName = "PriceTypeName";
+    public static final String PriceTypeItemName = "PriceTypeItemName";
+
 
     public static final String PriceCreationDate = "PriceCreationDate";
     public static final String PriceCreatorUserId = "PriceCreatorUserId";
 
+
+
+    @Column(name = PriceTypeItemName)
+    String  priceTypeItemName;
 
     @Column(name = PriceTypeId)
     String  priceTypeId;
 
     @Column(name = PriceTypeItemId)
     int priceTypeItemId;
+
 
     @Column(name = PriceTypeName)
     String  priceTypeName;
@@ -35,6 +44,14 @@ public class PriceType extends Model implements Serializable {
     @Column(name = PriceCreatorUserId)
     int  priceCreatorUserId;
 
+
+    public String getPriceTypeItemName() {
+        return priceTypeItemName;
+    }
+
+    public void setPriceTypeItemName(String priceTypeItemName) {
+        this.priceTypeItemName = priceTypeItemName;
+    }
 
     public String getPriceTypeId() {
         return priceTypeId;

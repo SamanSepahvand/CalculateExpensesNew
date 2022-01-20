@@ -56,7 +56,6 @@ public class Constants {
 
 
     public static String[] PriceTypeHeader = new String[]{
-
             "خرید",
             "اجاره",
             "ماشین",
@@ -64,8 +63,22 @@ public class Constants {
             "رفت و آمد",
             "سرگرمی",
             "قبوض"
+    };
+
+
+    public static int[] PriceTypeHeaderPicture = new int[]{
+            R.drawable.icons8_shopee_64,
+            R.drawable.icons8_rent_64,
+            R.drawable.icons8_car_64,
+            R.drawable.icons8_ingredients_64,
+            R.drawable.icons8_traveler_64,
+            R.drawable.icons8_entertainment_64,
+            R.drawable.icons8_cash_receipt_64,
+
 
     };
+
+
 
 
     public static String[] CarPriceTypeItem = new String[]{
@@ -95,6 +108,9 @@ public class Constants {
             "مغازه"
     };
 
+
+
+
     public static String[] FoodPriceTypeItem = new String[]{
             "رستوران",
             "کافی شاپ",
@@ -121,6 +137,7 @@ public class Constants {
             "برق",
             "آب"
     };
+
 
 
 
