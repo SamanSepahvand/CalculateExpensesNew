@@ -49,7 +49,7 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
 
 
     private ImageView imgPriceTypeDelete;
-    private TextView txtPriceTypeCount;
+    private Button btnPriceTypeCount;
     private ConstraintLayout clPriceTypeFilterShow;
     private View view;
 
@@ -61,6 +61,9 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
 
     private  List<PriceType> priceTypeList = new ArrayList<>();
 
+
+
+    private ImageView imgPriceTypeAdd;
 
 
     @Override
@@ -130,7 +133,7 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
     private void filterCount(List<PriceType> priceTypeList) {
         if (priceTypeList != null && priceTypeList.size() != 0) {
                clPriceTypeFilterShow.setVisibility(View.VISIBLE);
-               txtPriceTypeCount.setText(priceTypeList.size() + "");
+//               txtPriceTypeCount.setText(priceTypeList.size() + "");
         }else{
                clPriceTypeFilterShow.setVisibility(View.GONE);
         }
@@ -142,7 +145,7 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
     private void deleteFilterCount() {
         if (priceTypeList != null && priceTypeList.size() != 0) {
             priceTypeList.clear();
-            txtPriceTypeCount.setText("0");
+//            txtPriceTypeCount.setText("0");
         }
     }
 
@@ -174,8 +177,10 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
         btnCancel = view.findViewById(R.id.btn_dialog_cancel);
         imgCloseDialog = view.findViewById(R.id.img_dialog_close);
         imgPriceTypeDelete = view.findViewById(R.id.img_pricetype_delete);
-        txtPriceTypeCount = view.findViewById(R.id.txt_pricetype_count);
+        btnPriceTypeCount = view.findViewById(R.id.btnPriceTypeCount);
         clPriceTypeFilterShow = view.findViewById(R.id.cl_pricetype_filter_show);
+
+        imgPriceTypeAdd=view.findViewById(R.id.img_pricetype_add);
 
 
 
@@ -204,6 +209,9 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
         imgCloseDialog.setOnClickListener(this);
         imgPriceTypeDelete.setOnLongClickListener(this);
 
+        imgPriceTypeAdd.setOnClickListener(this);
+
+
      clPriceTypeFilterShow.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
@@ -215,11 +223,11 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
 
 
 
-     txtPriceTypeCount.setOnClickListener(new View.OnClickListener() {
+        btnPriceTypeCount.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
              _priceType.GetPrice();
-           getDialog().dismiss();
+             getDialog().dismiss();
 
          }
      });
@@ -230,7 +238,6 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-
 
     }
     //
@@ -310,6 +317,14 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
                     acceptListener.accept();
                 dismiss();
                 break;
+            case R.id.img_pricetype_add:
+                DialogAddPriceType dialogAddPriceType=new DialogAddPriceType(getContext(),true,true);
+                dialogAddPriceType.setCancelable(true);
+                dialogAddPriceType.show();
+                dismiss();
+
+                break;
+
 
         }
 

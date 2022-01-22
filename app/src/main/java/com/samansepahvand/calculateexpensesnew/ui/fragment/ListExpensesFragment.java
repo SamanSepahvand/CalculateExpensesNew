@@ -119,6 +119,8 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
         searchView.setOnQueryTextListener(this);
         imgBack.setOnClickListener(this);
 
+
+        txtTotalPrice.setOnClickListener(this);
         txtFullName.setText(UserInformations.getFullName());
     }
 
@@ -207,6 +209,12 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
             case R.id.img_back:
                 navController.popBackStack();
                 break;
+
+            case R.id.txt_total_price:
+                navController.navigate(R.id.action_listExpensesFragment_to_invoiceDetailsFragment2);
+                break;
+
+
         }
     }
 }

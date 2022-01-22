@@ -47,5 +47,17 @@
         <action
             android:id="@+id/action_listExpensesFragment_to_addExpensesFragment"
             app:destination="@id/addExpensesFragment" />
+        <action
+            android:id="@+id/action_listExpensesFragment_to_invoiceDetailsFragment"
+            app:destination="@id/invoiceDetailsFragment" />
+        <action
+            android:id="@+id/action_listExpensesFragment_to_invoiceDetailsFragment2"
+            app:destination="@id/invoiceDetailsFragment"
+            app:enterAnim="@anim/anim_enter"
+            app:exitAnim="@anim/anim_exit" />
     </fragment>
+    <fragment
+        android:id="@+id/invoiceDetailsFragment"
+        android:name="com.samansepahvand.calculateexpensesnew.ui.fragment.InvoiceDetailsFragment"
+        android:label="InvoiceDetailsFragment" />
 </navigation>

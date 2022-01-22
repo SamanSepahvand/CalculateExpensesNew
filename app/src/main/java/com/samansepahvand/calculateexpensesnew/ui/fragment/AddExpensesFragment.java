@@ -15,7 +15,6 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +31,7 @@ import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepositor
 import com.samansepahvand.calculateexpensesnew.db.Info;
 import com.samansepahvand.calculateexpensesnew.db.PriceType;
 import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
-import com.samansepahvand.calculateexpensesnew.ui.adapter.MyExpandableListAdapter;
 import com.samansepahvand.calculateexpensesnew.ui.dialog.DialogFragmentPriceType;
-import com.samansepahvand.calculateexpensesnew.ui.dialog.DialogFragmentPriceTypeNew;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -385,14 +382,15 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
 
 
         if (!keyUpdate) {
+            if (priceType==null) return;
 
             info.setPriceTypeId(Integer.parseInt(priceType.getPriceTypeId()));
             info.setPriceTypeIdItem(priceType.getPriceTypeItemId());
             info.setCreatorUserId(priceType.getPriceCreatorUserId());
             info.setCreationDate(priceType.getPriceCreationDate());
 
-        }else{
 
+        }else{
             info.setPriceTypeId(infoData.getPriceTypeId());
             info.setPriceTypeIdItem(infoData.getPriceTypeIdItem());
             info.setCreatorUserId(infoData.getCreatorUserId());
@@ -422,7 +420,6 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
         dialog.setTargetFragment(AddExpensesFragment.this, 1);
         dialog.show(getFragmentManager(), getString(R.string.app_name));
 
-
     }
 
 
@@ -431,13 +428,13 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
 
         if (
                 preferences.contains("getPriceTypeItemId" )
-                && preferences.contains("getPriceTypeName")
+                && preferences.contains("getPriceTypeItemName")
                 && preferences.contains("getPriceTypeId") ) {
 
             priceType=new PriceType();
             priceType.setPriceTypeItemId(Integer.parseInt(preferences.getString("getPriceTypeItemId", "0")));
             priceType.setPriceTypeId(preferences.getString("getPriceTypeId", ""));
-            priceType.setPriceTypeName(preferences.getString("getPriceTypeName", ""));
+            priceType.setPriceTypeName(preferences.getString("getPriceTypeItemName", ""));
 
             priceType.setPriceCreatorUserId(UserInformations.getUserId());
             Calendar calendar=Calendar.getInstance();

@@ -202,7 +202,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 Spanned strHtml = Html.fromHtml(str);
                 txtPrice.setText(strHtml);
 
-                txtPriceType.setText(info.getPriceTypeName());
+                txtPriceType.setText(info.getPriceTypeItemName());
 
 
            }

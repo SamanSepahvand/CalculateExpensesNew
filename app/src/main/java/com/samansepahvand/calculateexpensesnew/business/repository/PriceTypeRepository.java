@@ -92,7 +92,7 @@ public class PriceTypeRepository {
             PriceType priceType = new PriceType();
             priceType.setPriceTypeId(headerId + "");
             priceType.setPriceTypeName(Constants.PriceTypeHeader[headerId]);
-            priceType.setPriceTypeName(array[j]);
+            priceType.setPriceTypeItemName(array[j]);
             priceType.setPriceTypeItemId(j);
             priceType.setPriceCreatorUserId(0);
             priceType.setPriceCreationDate(cal.getTime() + "");
@@ -160,4 +160,40 @@ public class PriceTypeRepository {
 
     }
 
+    public OperationResult<PriceType> GetLastIdPriceType(String tempPriceTypeIdHeader) {
+
+        try {
+
+            PriceType priceType = new Select().from(PriceType.class)
+                    .where(PriceType.PriceTypeId + "=?", tempPriceTypeIdHeader)
+                    .orderBy("id desc")
+                    .executeSingle();
+
+            if (priceType == null)
+                return new OperationResult("این دسته بندی وجود دارد !", false, null);
+
+            return new OperationResult<>(null, true, null,priceType,null);
+
+        } catch (Exception e) {
+
+            return new OperationResult<>("خطا در دریافت آخرین شماره دسته بندی !", false, e.getMessage());
+        }
+
+    }
+
+    public OperationResult<PriceType> AddUserPriceType(PriceType priceType) {
+        try {
+
+            if (priceType == null)
+                return new OperationResult("این دسته بندی  خالی می باشد !", false, null);
+
+            priceType.save();
+            return new OperationResult<>(null, true, null);
+
+        } catch (Exception e) {
+
+            return new OperationResult<>("خطا در ذخیره دسته بندی شما !", false, e.getMessage());
+        }
+
+    }
 }

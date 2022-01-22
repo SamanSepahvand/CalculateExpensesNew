@@ -21,16 +21,12 @@ public class Constants {
     public static Typeface CustomStyleElement() {
         Typeface fontIranSans = Typeface.createFromAsset(MainApplication.getAppMainContext().getAssets(),
                 "fonts/iran_sans.ttf");
-
         return fontIranSans;
-
-
     }
 
 
 
     public static int[] TypeImageAlertDialog = new int[]{
-
             R.drawable.ic_baseline_info_black_24,   //0
             R.drawable.ic_baseline_info_yellow_24,  //1
             R.drawable.ic_baseline_warning_24,      //2
@@ -39,7 +35,6 @@ public class Constants {
 
 
     public static int[] TypeButtonStyleAlertDialog = new int[]{
-
             R.drawable.shape_background_button_dialog_cancel,  //0
             R.drawable.shape_background_button_dialog_yellow,  //1
             R.drawable.shape_background_button_dialog_red,     //2

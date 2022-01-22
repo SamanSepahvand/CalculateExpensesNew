@@ -78,7 +78,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_pricetype_filter_show"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/shape_background_button_dialog_red_stroke"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/constraintLayout6"
@@ -88,58 +88,55 @@
 
 
         <ImageView
-            android:id="@+id/img_pricetype_delete"
+            android:id="@+id/img_pricetype_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_filter"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btn_filter"
-            app:layout_constraintTop_toTopOf="@+id/btn_filter"
-            app:srcCompat="@drawable/ic_baseline_highlight_red_off_24" />
+            app:layout_constraintStart_toEndOf="@+id/btnPriceTypeCount"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_add_circle_outline_24" />
 
         <Button
-            android:id="@+id/btn_filter"
+            android:id="@+id/btnPriceTypeCount"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-
-            android:background="@color/newTransparent"
-            android:gravity="center|right"
-            android:paddingRight="10dp"
-            android:text="انتخابی"
-            android:textColor="#fff"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/img_pricetype_delete"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardview"
-            android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            app:cardCornerRadius="50dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_filter"
-            app:layout_constraintStart_toStartOf="@+id/btn_filter"
-            app:layout_constraintTop_toTopOf="@+id/btn_filter">
+            android:background="@drawable/card_background_all_radius_white"
+            android:gravity="center"
+            android:text="تایید"
+            android:textColor="#000"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/txt_pricetype_count"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="0"
-                android:textColor="@color/newRedDark"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_filter"
-                app:layout_constraintStart_toStartOf="@+id/btn_filter"
-                app:layout_constraintTop_toTopOf="@+id/btn_filter" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="25dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnPriceTypeCount"
+            app:layout_constraintEnd_toEndOf="@+id/btnPriceTypeCount"
+            app:layout_constraintTop_toTopOf="@+id/btnPriceTypeCount">
+
+            <ImageView
+                android:id="@+id/img_pricetype_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_background_all_radius_red"
+                app:layout_constraintBottom_toBottomOf="@+id/btnPriceTypeCount"
+                app:layout_constraintEnd_toEndOf="@+id/btnPriceTypeCount"
+                app:layout_constraintTop_toTopOf="@+id/btnPriceTypeCount"
+                app:srcCompat="@drawable/ic_baseline_highlight_red_off_24" />
 
 
         </androidx.cardview.widget.CardView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

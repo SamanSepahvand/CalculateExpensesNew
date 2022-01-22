@@ -1,10 +1,8 @@
 package com.samansepahvand.calculateexpensesnew.ui.adapter;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,17 +10,11 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.samansepahvand.calculateexpensesnew.R;
 import com.samansepahvand.calculateexpensesnew.db.PriceType;
 import com.samansepahvand.calculateexpensesnew.infrastructure.expandableListView.PriceTypeHeader;
 import com.samansepahvand.calculateexpensesnew.ui.dialog.DialogFragmentPriceType;
-import com.samansepahvand.calculateexpensesnew.ui.dialog.DialogFragmentPriceTypeNew;
-import com.samansepahvand.calculateexpensesnew.ui.fragment.AddExpensesFragment;
 
 public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -68,7 +60,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.listrow_details, null);
         }
         text = (TextView) convertView.findViewById(R.id.textView1);
-        text.setText(children.getPriceTypeName());
+        text.setText(children.getPriceTypeItemName());
 
 
         convertView.setOnClickListener(new View.OnClickListener() {
@@ -101,9 +93,12 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     private void savePriceType(PriceType priceType){
 
         SharedPreferences.Editor editor=preferences.edit();
+
         editor.putString("getPriceTypeItemId",priceType.getPriceTypeItemId()+"");
-        editor.putString("getPriceTypeName",priceType.getPriceTypeName());
+        editor.putString("getPriceTypeItemName",priceType.getPriceTypeItemName());
         editor.putString("getPriceTypeId",priceType.getPriceTypeId());
+
+
         editor.apply();
 
     ///  dialogFragmentPriceType.dismiss();
