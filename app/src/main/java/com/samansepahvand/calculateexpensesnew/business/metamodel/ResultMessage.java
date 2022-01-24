@@ -5,6 +5,7 @@ public class ResultMessage {
     public  static   String ErrorMessage="خطا در ثبت اطلاعات";
     public  static   String ErrorMessageRecive="خطا در دریافت اطلاعات از سرور";
     public static    String SuccessMessage="عملیات با موفقیت انجام شد";
+    public static    String ErrorNewMessage="خطا در دریافت لیست مورد نظر";
 
 
     public static    String ErrorUpdateFileMessag="خطا در بروزرسانی فایل";

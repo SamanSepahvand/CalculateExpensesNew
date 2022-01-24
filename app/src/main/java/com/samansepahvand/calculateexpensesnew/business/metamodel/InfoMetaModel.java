@@ -22,6 +22,13 @@ public class InfoMetaModel extends Model implements Serializable {
     @Column(name = PriceTypeItemName)
     String  priceTypeItemName;
 
+    @Column(name = PriceTypeId)
+    int  priceTypeId;
+
+    @Column(name = PriceTypeItemId)
+    int  priceTypeItemId;
+
+
 
     @Column(name = TITLE)
     String  title;
@@ -43,12 +50,6 @@ public class InfoMetaModel extends Model implements Serializable {
     String  estimateDate;
 
 
-    @Column(name = PRICE_TYPE_ID)
-    int  priceTypeId;
-    @Column(name = PRICE_TYPE_ITEM)
-    int  priceTypeIdItem;
-
-
     @Column(name = CreatorUserId)
     int  creatorUserId;
 
@@ -56,8 +57,21 @@ public class InfoMetaModel extends Model implements Serializable {
     String  creationDate;
 
 
+    public int getPriceTypeId() {
+        return priceTypeId;
+    }
 
+    public void setPriceTypeId(int priceTypeId) {
+        this.priceTypeId = priceTypeId;
+    }
 
+    public int getPriceTypeItemId() {
+        return priceTypeItemId;
+    }
+
+    public void setPriceTypeItemId(int priceTypeItemId) {
+        this.priceTypeItemId = priceTypeItemId;
+    }
 
     public String getPriceTypeName() {
         return priceTypeName;
@@ -75,21 +89,6 @@ public class InfoMetaModel extends Model implements Serializable {
         this.priceTypeItemName = priceTypeItemName;
     }
 
-    public int getPriceTypeId() {
-        return priceTypeId;
-    }
-
-    public void setPriceTypeId(int priceTypeId) {
-        this.priceTypeId = priceTypeId;
-    }
-
-    public int getPriceTypeIdItem() {
-        return priceTypeIdItem;
-    }
-
-    public void setPriceTypeIdItem(int priceTypeIdItem) {
-        this.priceTypeIdItem = priceTypeIdItem;
-    }
 
     public int getCreatorUserId() {
         return creatorUserId;

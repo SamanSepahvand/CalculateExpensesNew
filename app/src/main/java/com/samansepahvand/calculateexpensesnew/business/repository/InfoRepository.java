@@ -8,18 +8,23 @@ import com.activeandroid.util.SQLiteUtils;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.DetailMainInfo;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.InfoMetaModel;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.ResultMessage;
 import com.samansepahvand.calculateexpensesnew.db.Info;
 import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
 
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 
 public class InfoRepository {
-    
+
     private static final String TAG = "InfoRepository";
     private static InfoRepository infoRepository = null;
     private Context context;
@@ -35,7 +40,7 @@ public class InfoRepository {
 
             synchronized (InfoRepository.class) {
                 if (infoRepository == null) {
-                   infoRepository = new InfoRepository();
+                    infoRepository = new InfoRepository();
                 }
             }
         }
@@ -43,10 +48,10 @@ public class InfoRepository {
     }
 
 
-    public OperationResult<String> AddPrice(Info info, long  id) {
+    public OperationResult<String> AddPrice(Info info, long id) {
 
         try {
-            if (id!=0) {
+            if (id != 0) {
                 Info infoUpdate = new Select().from(Info.class).where("Id=?", id).executeSingle();
                 if (infoUpdate != null) {
 
@@ -59,8 +64,8 @@ public class InfoRepository {
 
                     infoUpdate.save();
                     return new OperationResult<>(null, true, null);
-                }else{
-                    return new OperationResult<>("خطا ", false,null);
+                } else {
+                    return new OperationResult<>("خطا ", false, null);
                 }
             } else {
                 Date date = new Date();
@@ -77,8 +82,6 @@ public class InfoRepository {
         }
 
     }
-
-
 
 
     public OperationResult DeleteItem(Info info) {
@@ -102,21 +105,19 @@ public class InfoRepository {
 //                    .execute();
 
 
-
-            String query="select * from info  i " +
+            String query = "select * from info  i " +
                     " left join priceType t on t.PriceTypeItemId=i.priceTypeIdItem and t.PriceTypeId=i.PriceTypeId  " +
                     " order by id desc";
 
 
-            List<InfoMetaModel> metaModels= SQLiteUtils.rawQuery(InfoMetaModel.class,query,null);
-
+            List<InfoMetaModel> metaModels = SQLiteUtils.rawQuery(InfoMetaModel.class, query, null);
 
 
             if (metaModels.size() > 0) {
                 for (InfoMetaModel info : metaModels) {
                     totalPrice += info.getPrice();
                     info.setFarsiDate(Utility.ShowTimeFarsiMeta(info));
-                    info.setEstimateDate(Utility.SeparateTimeForEstimate(info.getEnglishDate()).getEstimatedTime()+" روز پیش ");
+                    info.setEstimateDate(Utility.SeparateTimeForEstimate(info.getEnglishDate()).getEstimatedTime() + " روز پیش ");
 
 
                 }
@@ -136,11 +137,10 @@ public class InfoRepository {
     }
 
 
-    public OperationResult<DetailMainInfo> DetailMainInfo(){
+    public OperationResult<DetailMainInfo> DetailMainInfo() {
 
-        try{
-            DetailMainInfo detailMainInfo=new DetailMainInfo();
-
+        try {
+            DetailMainInfo detailMainInfo = new DetailMainInfo();
 
 
             ///total Price
@@ -151,38 +151,38 @@ public class InfoRepository {
                     totalPrice += info.getPrice();
                 }
             }
-            detailMainInfo.setTotalPrice(totalPrice+"");
+            detailMainInfo.setTotalPrice(totalPrice + "");
             /// invoiceCount
 
-            detailMainInfo.setInvoiceCount(infos.size()+"");
+            detailMainInfo.setInvoiceCount(infos.size() + "");
             //getMaxPrice
             List<Info> maxPrice = new Select().from(Info.class).orderBy("price desc").execute();
-            detailMainInfo.setMaxInvoicePrice(maxPrice.get(0).getPrice()+"");
+            detailMainInfo.setMaxInvoicePrice(maxPrice.get(0).getPrice() + "");
 
             //laseDate
-            detailMainInfo.setLastInvoiceDate(Utility.SeparateTimeForEstimate(infos.get(infos.size()-1).getEnglishDate()).getEstimatedTime()+" روز پیش ");
+            detailMainInfo.setLastInvoiceDate(Utility.SeparateTimeForEstimate(infos.get(infos.size() - 1).getEnglishDate()).getEstimatedTime() + " روز پیش ");
 
             //laseDate
-            detailMainInfo.setCurrentDate(" "+Utility.ShowTimeFarsi(infos.get(infos.size()-1)));
+            detailMainInfo.setCurrentDate(" " + Utility.ShowTimeFarsi(infos.get(infos.size() - 1)));
 
-            return new OperationResult<DetailMainInfo>(null,true,null,detailMainInfo,null);
-        }catch (Exception e){
-            return new OperationResult<DetailMainInfo>(null,false,e.getMessage());
+            return new OperationResult<DetailMainInfo>(null, true, null, detailMainInfo, null);
+        } catch (Exception e) {
+            return new OperationResult<DetailMainInfo>(null, false, e.getMessage());
 
         }
     }
 
-    public OperationResult<Info> GetInfoByMeta(InfoMetaModel infoMetaModel,String typeAction) {
+    public OperationResult<Info> GetInfoByMeta(InfoMetaModel infoMetaModel, String typeAction) {
 
         try {
-            Info info=   new Select().from(Info.class).where("Id=?", infoMetaModel.getId()).executeSingle();
-            if (typeAction.equals("Show")){
-                return new OperationResult<>(null, true, null,info,null);
-            }else if (typeAction.equals("Delete")){
+            Info info = new Select().from(Info.class).where("Id=?", infoMetaModel.getId()).executeSingle();
+            if (typeAction.equals("Show")) {
+                return new OperationResult<>(null, true, null, info, null);
+            } else if (typeAction.equals("Delete")) {
                 DeleteItem(info);
-                return new OperationResult<>(null, true, null,info,null);
-            }else{
-                return new OperationResult<>("خطا در  بازیابی  !", false,null);
+                return new OperationResult<>(null, true, null, info, null);
+            } else {
+                return new OperationResult<>("خطا در  بازیابی  !", false, null);
             }
 
         } catch (Exception e) {
@@ -192,6 +192,67 @@ public class InfoRepository {
     }
 
 
+    public OperationResult<InfoMetaModel> GetSameInvoices(InfoMetaModel infoMetaModel) {
 
+        try {
+            String query = "select distinct *   from info  i " +
+                    " left join priceType t  on  t.PriceTypeId=i.PriceTypeId  "
+                    +"where i.PriceTypeId= "+infoMetaModel.getPriceTypeId()+"  and  i.id<>"+infoMetaModel.getId()+
+                    " order by id asc  limit 10";
+            List<InfoMetaModel> metaModels = SQLiteUtils.rawQuery(InfoMetaModel.class, query, null);
+
+
+
+
+
+
+            if (metaModels==null)return new OperationResult<>(ResultMessage.ErrorNewMessage, false, null);
+            List<InfoMetaModel> newResult= removeDuplicates(metaModels);
+
+
+            InfoMetaModel first=new InfoMetaModel();
+            first.setPriceTypeId(newResult.get(0).getPriceTypeId());
+
+           first.setTitle("مشاهده همه");
+
+
+            InfoMetaModel last=new InfoMetaModel();
+            last.setPriceTypeId(newResult.get(0).getPriceTypeId());
+            last.setTitle("مشاهده همه >");
+
+
+
+            newResult.add(0,last);
+            newResult.add(newResult.size(),first);
+
+            return new OperationResult<>(null ,true, null,null,newResult);
+
+
+        } catch (Exception e) {
+            return new OperationResult<>(ResultMessage.ErrorNewMessage, false, null);
+
+        }
+    }
+
+    public List<InfoMetaModel> removeDuplicates(List<InfoMetaModel> list) {
+        // Set set1 = new LinkedHashSet(list);
+        Set set = new TreeSet(new Comparator() {
+
+            @Override
+            public int compare(Object o1, Object o2) {
+                if (((InfoMetaModel) o1).getId().toString().equalsIgnoreCase(((InfoMetaModel) o2).getId().toString()) /*&&
+                    ((Blog)o1).getName().equalsIgnoreCase(((Blog)o2).getName())*/) {
+                    return 0;
+                }
+                return 1;
+            }
+        });
+        set.addAll(list);
+
+        final List newList = new ArrayList(set);
+        return newList;
+
+
+    }
 
 }

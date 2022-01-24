@@ -52,7 +52,7 @@ import static com.samansepahvand.calculateexpensesnew.infrastructure.Utility.Dia
  * Use the {@link AddExpensesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddExpensesFragment extends Fragment implements View.OnClickListener, DialogFragmentPriceType.IPriceTypeNew, View.OnLongClickListener {
+public class AddExpensesFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener, DialogFragmentPriceType.IPriceTypeNew {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -423,27 +423,27 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
     }
 
 
-    @Override
-    public void GetPrice() {
-
-        if (
-                preferences.contains("getPriceTypeItemId" )
-                && preferences.contains("getPriceTypeItemName")
-                && preferences.contains("getPriceTypeId") ) {
-
-            priceType=new PriceType();
-            priceType.setPriceTypeItemId(Integer.parseInt(preferences.getString("getPriceTypeItemId", "0")));
-            priceType.setPriceTypeId(preferences.getString("getPriceTypeId", ""));
-            priceType.setPriceTypeName(preferences.getString("getPriceTypeItemName", ""));
-
-            priceType.setPriceCreatorUserId(UserInformations.getUserId());
-            Calendar calendar=Calendar.getInstance();
-            priceType.setPriceCreationDate(calendar.getTime()+"");
-
-
-            fillPriceType(priceType);
-        }
-    }
+//    @Override
+//    public void GetPrice() {
+//
+//        if (
+//                preferences.contains("getPriceTypeItemId" )
+//                && preferences.contains("getPriceTypeItemName")
+//                && preferences.contains("getPriceTypeId") ) {
+//
+//            priceType=new PriceType();
+//            priceType.setPriceTypeItemId(Integer.parseInt(preferences.getString("getPriceTypeItemId", "0")));
+//            priceType.setPriceTypeId(preferences.getString("getPriceTypeId", ""));
+//            priceType.setPriceTypeName(preferences.getString("getPriceTypeItemName", ""));
+//
+//            priceType.setPriceCreatorUserId(UserInformations.getUserId());
+//            Calendar calendar=Calendar.getInstance();
+//            priceType.setPriceCreationDate(calendar.getTime()+"");
+//
+//
+//            fillPriceType(priceType);
+//        }
+//    }
 
     private void fillPriceType(PriceType priceType) {
         if (priceType != null) {
@@ -467,6 +467,28 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
 
         txtPriceTypeResult.setVisibility(View.GONE);
         txtPriceTypeResult.setText("");
+
+    }
+
+    @Override
+    public void GetPrice(PriceType priceType1) {
+
+        if (priceType1!=null){
+
+             priceType  =new PriceType();
+
+            priceType.setPriceTypeItemId(priceType1.getPriceTypeItemId());
+            priceType.setPriceTypeId(priceType1.getPriceTypeId());
+            priceType.setPriceTypeName(priceType1.getPriceTypeItemName());
+
+            priceType.setPriceCreatorUserId(UserInformations.getUserId());
+            Calendar calendar=Calendar.getInstance();
+            priceType.setPriceCreationDate(calendar.getTime()+"");
+
+
+            fillPriceType(priceType1);
+        }
+
 
     }
 }

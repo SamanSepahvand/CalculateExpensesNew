@@ -132,4 +132,19 @@ public class AccountRepository {
 
 
     }
+
+    public String getUserById(int creatorUserId) {
+
+    try{
+
+        Account account=new Select().from(Account.class).where("id =?",creatorUserId).executeSingle();
+
+        if (account==null) return "مشخص نیست.";
+        return account.getFirstName()+" "+account.getLastName();
+
+
+    }catch (Exception e){
+        return "نا مشخص !";
+    }
+    }
 }

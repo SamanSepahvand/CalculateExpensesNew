@@ -22,22 +22,24 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     public LayoutInflater inflater;
     public Activity activity;
 
-
     SharedPreferences preferences;
 
-    DialogFragmentPriceType dialogFragmentPriceType;
 
-
-    public MyExpandableListAdapter(Activity act, SparseArray<PriceTypeHeader> groups,DialogFragmentPriceType fragmentPriceType){
-        activity =act;
-        this.groups = groups;
-      inflater=act.getLayoutInflater();
-        preferences=activity.getSharedPreferences("Pref",Context.MODE_PRIVATE);
-        dialogFragmentPriceType=fragmentPriceType;
-
+    public interface IGetPriceType {
+        void GetPriceType(PriceType priceType);
 
     }
 
+    private IGetPriceType _iGetPriceType;
+
+    public MyExpandableListAdapter(Activity act, SparseArray<PriceTypeHeader> groups, IGetPriceType _iGetPriceType) {
+        activity = act;
+        this.groups = groups;
+        inflater = act.getLayoutInflater();
+        preferences = activity.getSharedPreferences("Pref", Context.MODE_PRIVATE);
+        this._iGetPriceType = _iGetPriceType;
+
+    }
 
 
     @Override
@@ -81,6 +83,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
                  */
 
+                _iGetPriceType.GetPriceType(children);
 
                 savePriceType(children);
 
@@ -90,20 +93,19 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
 
-    private void savePriceType(PriceType priceType){
+    private void savePriceType(PriceType priceType) {
 
-        SharedPreferences.Editor editor=preferences.edit();
+        SharedPreferences.Editor editor = preferences.edit();
 
-        editor.putString("getPriceTypeItemId",priceType.getPriceTypeItemId()+"");
-        editor.putString("getPriceTypeItemName",priceType.getPriceTypeItemName());
-        editor.putString("getPriceTypeId",priceType.getPriceTypeId());
+        editor.putString("getPriceTypeItemId", priceType.getPriceTypeItemId() + "");
+        editor.putString("getPriceTypeItemName", priceType.getPriceTypeItemName());
+        editor.putString("getPriceTypeId", priceType.getPriceTypeId());
 
 
         editor.apply();
 
-    ///  dialogFragmentPriceType.dismiss();
+        ///  dialogFragmentPriceType.dismiss();
     }
-
 
 
     @Override
@@ -145,8 +147,6 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
 
-
-
         PriceTypeHeader group = (PriceTypeHeader) getGroup(groupPosition);
         ((CheckedTextView) convertView).setText(group.priceTypeName);
         ((CheckedTextView) convertView).setCompoundDrawablesWithIntrinsicBounds(0, 0, group.pic, 0);
@@ -165,8 +165,6 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
     }
-
-
 
 
 }

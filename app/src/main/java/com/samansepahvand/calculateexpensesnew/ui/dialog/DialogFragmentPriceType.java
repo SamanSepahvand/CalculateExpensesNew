@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DialogFragmentPriceType extends DialogFragment implements View.OnClickListener, View.OnLongClickListener {
+public class DialogFragmentPriceType extends DialogFragment implements View.OnClickListener, View.OnLongClickListener , MyExpandableListAdapter.IGetPriceType{
 
     private static final String TAG = "DialogPriceType";
 
@@ -48,8 +48,6 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
     private ImageView imgCloseDialog;
 
 
-    private ImageView imgPriceTypeDelete;
-    private Button btnPriceTypeCount;
     private ConstraintLayout clPriceTypeFilterShow;
     private View view;
 
@@ -61,32 +59,19 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
 
     private  List<PriceType> priceTypeList = new ArrayList<>();
 
+    private MyExpandableListAdapter.IGetPriceType _iGetPriceType;
+    private IPriceTypeNew  _priceType;
 
-
-    private ImageView imgPriceTypeAdd;
 
 
     @Override
-    public void onAttach(@NonNull Context context) {
+    public void GetPriceType(PriceType priceType) {
 
-        try{
-            _priceType=(IPriceTypeNew) getTargetFragment();
-        }catch (ClassCastException  e){
-
-            Log.e(TAG, "onAttach: "+e.getMessage() );
-        }
-
-        super.onAttach(context);
-    }
-
-    public interface  IPriceTypeNew{
-        void GetPrice();
+        _priceType.GetPrice(priceType);
+        getDialog().dismiss();
     }
 
 
-    IPriceTypeNew  _priceType;
-
-    
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -158,7 +143,7 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
 
 
             MyExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(),
-                    result.Item,this );
+                    result.Item,_iGetPriceType );
 
             listView.setAdapter(adapter);
 
@@ -172,15 +157,13 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
     private void initView(View view) {
 
         listView = (ExpandableListView) view.findViewById(R.id.listView);
-
+        _iGetPriceType=(MyExpandableListAdapter.IGetPriceType) this;
         btnConfirm = view.findViewById(R.id.btn_dialog_confirm);
         btnCancel = view.findViewById(R.id.btn_dialog_cancel);
         imgCloseDialog = view.findViewById(R.id.img_dialog_close);
-        imgPriceTypeDelete = view.findViewById(R.id.img_pricetype_delete);
-        btnPriceTypeCount = view.findViewById(R.id.btnPriceTypeCount);
+
         clPriceTypeFilterShow = view.findViewById(R.id.cl_pricetype_filter_show);
 
-        imgPriceTypeAdd=view.findViewById(R.id.img_pricetype_add);
 
 
 
@@ -207,96 +190,34 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
         btnConfirm.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
         imgCloseDialog.setOnClickListener(this);
-        imgPriceTypeDelete.setOnLongClickListener(this);
-
-        imgPriceTypeAdd.setOnClickListener(this);
-
-
-     clPriceTypeFilterShow.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-
-         }
-     });
-
-
-
-
-
-        btnPriceTypeCount.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-             _priceType.GetPrice();
-             getDialog().dismiss();
-
-         }
-     });
+        clPriceTypeFilterShow.setOnClickListener(this);
 
 
     }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+
+        try{
+            _priceType=(IPriceTypeNew) getTargetFragment();
+        }catch (ClassCastException  e){
+
+            Log.e(TAG, "onAttach: "+e.getMessage() );
+        }
+
+        super.onAttach(context);
+    }
+
+    public interface  IPriceTypeNew{
+        void GetPrice(PriceType priceType);
+    }
+
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
 
     }
-    //
-//    private void initView(final boolean hasConfirm, final boolean hasCancel) {
-//
-//         listView = (ExpandableListView) findViewById(R.id.listView);
-//
-//        btnConfirm = findViewById(R.id.btn_dialog_confirm);
-//        btnCancel = findViewById(R.id.btn_dialog_cancel);
-//        imgCloseDialog = findViewById(R.id.img_dialog_close);
-//        txtPriceTypeResult=findViewById(R.id.txt_pricetype_result);
-//
-//
-//
-//        btnConfirm.setVisibility(View.GONE);
-//        btnCancel.setVisibility(View.GONE);
-//
-//
-//
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                btnConfirm.startAnimation(MainApplication.SetAnimation("FadeIn"));
-//                btnCancel.startAnimation(MainApplication.SetAnimation("FadeIn"));
-////                if (hasCancel) btnCancel.setVisibility(View.VISIBLE);
-////                if (hasConfirm) btnConfirm.setVisibility(View.VISIBLE);
-//                // txtBody.setVisibility(View.VISIBLE);
-//            }
-//        }, Constants.DelayMoreFast);
-//
-//
-//        OpenDialogChoosePriceType();
-//        imgCloseDialog.startAnimation(MainApplication.SetAnimation("Rotate"));
-//        btnConfirm.setOnClickListener(this);
-//        btnCancel.setOnClickListener(this);
-//        imgCloseDialog.setOnClickListener(this);
-//
-//
-//
-//    }
-
-//    private void initValue(AlertDialogModel dialog) {
-//
-//        if (dialog.getActionConfirm().equals("")) {
-//            btnConfirm.setVisibility(View.GONE);
-//        } else {
-//            btnConfirm.setText(dialog.getActionConfirm());
-//        }
-//
-//        if (dialog.getActionCancel().equals("")) {
-//            btnCancel.setVisibility(View.GONE);
-//        } else {
-//            btnCancel.setText(dialog.getActionCancel());
-//        }
-//
-//
-//        txtBody.setText(dialog.getContent());
-//
-//    }
 
 
     @Override
@@ -317,7 +238,7 @@ public class DialogFragmentPriceType extends DialogFragment implements View.OnCl
                     acceptListener.accept();
                 dismiss();
                 break;
-            case R.id.img_pricetype_add:
+            case R.id.cl_pricetype_filter_show:
                 DialogAddPriceType dialogAddPriceType=new DialogAddPriceType(getContext(),true,true);
                 dialogAddPriceType.setCancelable(true);
                 dialogAddPriceType.show();

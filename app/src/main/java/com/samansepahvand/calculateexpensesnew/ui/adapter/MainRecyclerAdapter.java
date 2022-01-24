@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,11 +43,21 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
     private ActionInfo actionInfo;
+    private IGetMetaInfo _iGetMetaInfo;
 
-    public MainRecyclerAdapter(Context context) {
+    public interface IGetMetaInfo{
+
+        void GetMetaInfo(InfoMetaModel metaModel);
+
+    }
+
+
+    public MainRecyclerAdapter(Context context,IGetMetaInfo _iGetMetaInfo) {
         mDatas = new ArrayList<>();
         mContext = context;
         actionInfo = (ActionInfo) context;
+        this._iGetMetaInfo=_iGetMetaInfo;
+
     }
 
     public void setDatas(List<InfoMetaModel> datas) {
@@ -81,18 +92,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-
-
-
-
                         OperationResult<Info> result = InfoRepository.getInstance().GetInfoByMeta(mDatas.get(position),"Show");
                         actionInfo.actionInfo(result.Item);
-
-
-
-
-
                     }
                 }
 
@@ -150,6 +151,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         View mActionContainer;
         private TextView txtTitle, txtPrice, txtDate, txtRow,txtEstimateTime,txtPriceType;
 
+        private ImageView imgShowInvoices;
+
         private FrameLayout root;
 
         public ItemBaseViewHolder(View itemView) {
@@ -168,13 +171,24 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             root = itemView.findViewById(R.id.root);
             txtPriceType =itemView.findViewById(R.id.txt_price_type);
 
+            imgShowInvoices=itemView.findViewById(R.id.img_show_invoices);
 
 
             mViewContent = itemView.findViewById(R.id.view_list_main_content);
             mActionContainer = itemView.findViewById(R.id.view_list_repo_action_container);
 
             mActionContainer.setSelected(true);
+
+
+            imgShowInvoices.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _iGetMetaInfo.GetMetaInfo(mDatas.get(getAdapterPosition()));
+
+                }
+            });
         }
+
 
         public void bind(InfoMetaModel testModel) {
             setProductDeliveryItems(testModel, getAdapterPosition());

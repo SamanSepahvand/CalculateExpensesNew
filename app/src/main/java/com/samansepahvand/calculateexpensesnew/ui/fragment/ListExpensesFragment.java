@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,15 +30,18 @@ import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResul
 import com.samansepahvand.calculateexpensesnew.business.metamodel.UserInformations;
 import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
 import com.samansepahvand.calculateexpensesnew.db.Info;
+import com.samansepahvand.calculateexpensesnew.db.PriceType;
 import com.samansepahvand.calculateexpensesnew.helper.interfaces.ActionInfo;
 import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
 import com.samansepahvand.calculateexpensesnew.ui.adapter.ItemTouchHelperCallback;
 import com.samansepahvand.calculateexpensesnew.ui.adapter.MainRecyclerAdapter;
+import com.samansepahvand.calculateexpensesnew.ui.adapter.MyExpandableListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListExpensesFragment extends Fragment implements View.OnClickListener, ActionInfo, SearchView.OnQueryTextListener {
+public class ListExpensesFragment extends Fragment implements View.OnClickListener, ActionInfo, SearchView.OnQueryTextListener,
+        MainRecyclerAdapter.IGetMetaInfo , MyExpandableListAdapter.IGetPriceType {
 
 
     private static final String ARG_PARAM1 = "param1";
@@ -54,6 +58,7 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
     private SearchView searchView;
     private ImageView imgBack;
 
+private MainRecyclerAdapter.IGetMetaInfo iGetMetaInfo;
 
     public ListExpensesFragment() {
         // Required empty public constructor
@@ -112,7 +117,9 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        showAdapter = new MainRecyclerAdapter(getContext());
+        iGetMetaInfo=(MainRecyclerAdapter.IGetMetaInfo)this;
+        showAdapter = new MainRecyclerAdapter(getContext(),iGetMetaInfo);
+
         recyclerView.setAdapter(showAdapter);
         initData();
 
@@ -211,10 +218,25 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
                 break;
 
             case R.id.txt_total_price:
-                navController.navigate(R.id.action_listExpensesFragment_to_invoiceDetailsFragment2);
                 break;
 
 
         }
+    }
+
+    @Override
+    public void GetMetaInfo(InfoMetaModel metaModel) {
+        ListExpensesFragmentDirections.ActionListFragmentToInvoiceDetailsFragment action=
+                ListExpensesFragmentDirections.actionListFragmentToInvoiceDetailsFragment();
+        action.setInfoMetaModel(metaModel);
+        navController.navigate(action);
+
+
+    }
+
+    @Override
+    public void GetPriceType(PriceType priceType) {
+
+        Log.e("TAG", "GetPriceType: hi hizenberg " );
     }
 }

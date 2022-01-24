@@ -48,10 +48,7 @@
             android:id="@+id/action_listExpensesFragment_to_addExpensesFragment"
             app:destination="@id/addExpensesFragment" />
         <action
-            android:id="@+id/action_listExpensesFragment_to_invoiceDetailsFragment"
-            app:destination="@id/invoiceDetailsFragment" />
-        <action
-            android:id="@+id/action_listExpensesFragment_to_invoiceDetailsFragment2"
+            android:id="@+id/action_ListFragment_to_InvoiceDetailsFragment"
             app:destination="@id/invoiceDetailsFragment"
             app:enterAnim="@anim/anim_enter"
             app:exitAnim="@anim/anim_exit" />
@@ -59,5 +56,21 @@
     <fragment
         android:id="@+id/invoiceDetailsFragment"
         android:name="com.samansepahvand.calculateexpensesnew.ui.fragment.InvoiceDetailsFragment"
-        android:label="InvoiceDetailsFragment" />
+        android:label="InvoiceDetailsFragment" >
+        <argument
+            android:name="InfoMetaModel"
+            app:argType="com.samansepahvand.calculateexpensesnew.business.metamodel.InfoMetaModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_invoiceDetailsFragment_self"
+            app:destination="@id/invoiceDetailsFragment"
+            app:enterAnim="@anim/anim_enter"
+            app:exitAnim="@anim/anim_exit" />
+        <action
+            android:id="@+id/action_invoiceDetailsFragment_to_listExpensesFragment"
+            app:destination="@id/listExpensesFragment"
+            app:enterAnim="@anim/anim_enter"
+            app:exitAnim="@anim/anim_enter" />
+    </fragment>
 </navigation>

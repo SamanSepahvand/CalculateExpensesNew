@@ -106,6 +106,9 @@
     <color name="newTransparent">#00F2F4F5</color>
     <color name="newGreenDark">#123c3d</color>
     <color name="newRedDark">#d32f2f</color>
+
+    <color name="newGreenDarkIten">#388e3c</color>
+
     <color name="newGreenDark1">#388e3c</color>
     <color name="newYellowDark">#fbc02d</color>
     <color name="newGrayDark">#616161</color>
