@@ -3,16 +3,22 @@ package com.samansepahvand.calculateexpensesnew.ui.fragment;
 import static com.samansepahvand.calculateexpensesnew.infrastructure.Utility.DialogFailed;
 import static com.samansepahvand.calculateexpensesnew.infrastructure.Utility.splitDigits;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -32,6 +38,11 @@ import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepositor
 import com.samansepahvand.calculateexpensesnew.db.Info;
 import com.samansepahvand.calculateexpensesnew.ui.adapter.SameInvoiceAdapter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,6 +72,8 @@ public class InvoiceDetailsFragment extends Fragment implements View.OnClickList
     private RecyclerView recyclerviewSameInvoices;
 
     private SameInvoiceAdapter.IGetSomeInfoMeta _iGetSomeInfoMeta;
+    private static final int REQUEST_EXTERNAL_STORAGe = 1;
+    private static String[] permissionstorage = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
 
     public InvoiceDetailsFragment() {
         // Required empty public constructor
@@ -114,6 +127,8 @@ public class InvoiceDetailsFragment extends Fragment implements View.OnClickList
     }
 
     private void initView(View view) {
+        verifystoragepermissions(getActivity());
+
         txtInvoiceTitle = view.findViewById(R.id.txt_title);
         txtInvoicePriceTypeFullName = view.findViewById(R.id.txt_price_type_full_name);
         txtInvoicePriceValue = view.findViewById(R.id.txt_value_price);
@@ -188,11 +203,60 @@ public class InvoiceDetailsFragment extends Fragment implements View.OnClickList
         switch (v.getId()) {
             case R.id.btn_share:
                 /// do some things stuff
+
+                screenshot(getActivity().getWindow().getDecorView().getRootView(), "result");
                 break;
 
             case R.id.img_back:
                 navController.popBackStack();
                 break;
+
+
+
+        }
+    }
+
+    protected static File screenshot(View view, String filename) {
+        Date date = new Date();
+
+        // Here we are initialising the format of our image name
+        CharSequence format = android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", date);
+        try {
+            // Initialising the directory of storage
+            String dirpath = Environment.getExternalStorageDirectory() + "";
+            File file = new File(dirpath);
+            if (!file.exists()) {
+                boolean mkdir = file.mkdir();
+            }
+
+            // File name
+            String path = dirpath + "/" + filename + "-" + format + ".jpeg";
+            view.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+            view.setDrawingCacheEnabled(false);
+            File imageurl = new File(path);
+            FileOutputStream outputStream = new FileOutputStream(imageurl);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            return imageurl;
+
+        } catch (FileNotFoundException io) {
+            io.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // verifying if storage permission is given or not
+    public static void verifystoragepermissions(Activity activity) {
+
+        int permissions = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        // If storage permission is not given then request for External Storage Permission
+        if (permissions != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, permissionstorage, REQUEST_EXTERNAL_STORAGe);
         }
     }
 
