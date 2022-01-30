@@ -19,6 +19,14 @@ public class CalendarTool {
                 calendar.get(Calendar.DAY_OF_MONTH));
     }
 
+    public CalendarTool( Calendar calendar) {
+        setGregorianDate(calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.DAY_OF_MONTH));
+    }
+
+
+
     public static String GetDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         return sdf.format(new java.util.Date());

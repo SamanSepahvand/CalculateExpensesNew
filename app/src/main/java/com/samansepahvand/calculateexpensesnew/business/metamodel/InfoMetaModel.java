@@ -36,8 +36,7 @@ public class InfoMetaModel extends Model implements Serializable {
     @Column(name = PRICE)
     int price;
 
-    @Column(name = DATE)
-    String  date;
+
 
     @Column(name = DATE_FARSI)
     String  farsiDate;
@@ -145,15 +144,6 @@ public class InfoMetaModel extends Model implements Serializable {
     public void setPrice(int price) {
         this.price = price;
     }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
 
 
 

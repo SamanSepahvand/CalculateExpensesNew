@@ -23,7 +23,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.samansepahvand.calculateexpensesnew.R;
+import com.samansepahvand.calculateexpensesnew.business.domain.Constants;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.ResultMessage;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.UserInformations;
@@ -86,7 +88,7 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
     private TextView txtPriceType;
 
 
-    private String date, time, invoiceTitle, invoicePrice;
+    private String engDate, time, invoiceTitle, invoicePrice;
 
     private static final String TAG = "AddExpensesFragment";
 
@@ -96,6 +98,13 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
     private TextView txtPriceTypeResult;
 
     private  PriceType priceType =new PriceType();
+
+
+    private TextInputLayout filledTextFieldUsername,filledTextFieldTitle;
+
+
+    private String chooseDate=null;
+private int ActionDate=0;
 
     public AddExpensesFragment() {
         // Required empty public constructor
@@ -146,6 +155,10 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
         txtPriceType = view.findViewById(R.id.txt_price_type);
 
         txtPriceTypeResult = view.findViewById(R.id.txt_price_type_result);
+        filledTextFieldUsername=view.findViewById(R.id.filledTextField_username);
+        filledTextFieldTitle=view.findViewById(R.id.filledTextField_title);
+
+
 
 
         edtTitle = view.findViewById(R.id.edt_name);
@@ -175,7 +188,12 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
         txtPriceType.setOnClickListener(this);
 
         txtPriceTypeResult.setOnLongClickListener(this);
-        PersianDataPicker();
+      //  PersianDataPicker();
+
+        filledTextFieldTitle.setTypeface(Constants.CustomStyleElement());
+        filledTextFieldUsername.setTypeface(Constants.CustomStyleElement());
+        edtPrice.setTypeface(Constants.CustomStyleElement());
+        edtTitle.setTypeface(Constants.CustomStyleElement());
 
 
     }
@@ -313,6 +331,8 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
 
     private void PersianDataPicker() {
 
+       String suggest = Utility.getIranianDateInt();
+       String[] suggestDate =suggest.split("/");
 
         PersianDatePickerDialog picker = new PersianDatePickerDialog(getContext())
                 .setPositiveButtonString("تایید")
@@ -321,11 +341,14 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
                 .setTodayButtonVisible(true)
                 .setMinYear(1300)
                 .setMaxYear(1450)
-                .setInitDate(1400, 3, 1)
+
+                .setInitDate( Integer.parseInt(suggestDate[0]),Integer.parseInt(suggestDate[1]),Integer.parseInt(suggestDate[2]))
                 .setActionTextColor(Color.GRAY)
                 //    .setTypeFace(Constants.CustomStyleElement())
                 .setTitleType(PersianDatePickerDialog.WEEKDAY_DAY_MONTH_YEAR)
                 .setShowInBottomSheet(true)
+
+
                 .setListener(new PersianPickerListener() {
                     @Override
                     public void onDateSelected(PersianPickerDate persianPickerDate) {
@@ -337,13 +360,29 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
 //                        Log.e(TAG, "onDateSelected: " + PersianCalendarUtils.isPersianLeapYear(persianPickerDate.getPersianYear()));//true
 //                        Log.e(TAG, "onDateSelected: " + persianPickerDate.getGregorianDay());//خرداد
 
-                        Date test = persianPickerDate.getGregorianDate();
-                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
-                        String strDate = dateFormat.format(test);
 
+
+
+                        Date selectedDate = persianPickerDate.getGregorianDate();
+                        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+                        String strDate = dateFormat.format(selectedDate);
+
+
+                        DateFormat dateFormatDate = new SimpleDateFormat("yyyy/MM/dd  hh:mm:ss");
+
+
+                        Calendar calendar=Calendar.getInstance();
+                        calendar.setTime(selectedDate);
+
+                        chooseDate= Utility.getIranianDateCustom(calendar);
+
+                        ActionDate=Integer.parseInt(strDate);
                         txtDateChoose.setText(persianPickerDate.getPersianLongDate());
-                        date = persianPickerDate.getPersianLongDate();
+
+                        engDate =  dateFormatDate.format(selectedDate);
+
                         OnlineInvoices();
+
 
 
 //                        persianTime = persianPickerDate.getGregorianDate() + "";
@@ -365,7 +404,7 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
     private void OnlineInvoices() {
 
         Spanned strHtml = Html.fromHtml(" شما در تاریخ  " + "<font color='red'>"
-                + date + "</font>" + " مبلغ  " + "<font color='red'>" + invoicePrice
+                + engDate + "</font>" + " مبلغ  " + "<font color='red'>" + invoicePrice
                 + "</font>" + " بابت هزینه  " + "<font color='red'>" + invoiceTitle + "</font>" + " پرداخت کرده اید. ");
 
         txtInvoiceShow.setText(strHtml);
@@ -378,26 +417,36 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
         Info info = new Info();
         info.setTitle(edtTitle.getText().toString());
         info.setPrice(Utility.GetPrice(edtPrice.getText().toString()));
-        info.setDate(keyUpdate ? infoData.getDate() : null);
+        info.setEnglishDate(keyUpdate ? infoData.getEnglishDate() : GetEngDate());
+        info.setActionDate(keyUpdate ?infoData.getActionDate() : GetActionDate());
+
+
 
 
         if (!keyUpdate) {
-            if (priceType==null) return;
+            if (priceType.getPriceTypeName()==null){
+                Toast.makeText(getContext(), "لطفا یک  دسته بندی را انتخاب کنید.", Toast.LENGTH_SHORT).show();
+                return;
+            }else{
+                info.setPriceTypeId(Integer.parseInt(priceType.getPriceTypeId()));
+                info.setPriceTypeIdItem(priceType.getPriceTypeItemId());
+                info.setCreatorUserId(priceType.getPriceCreatorUserId());
+                info.setCreationDate(priceType.getPriceCreationDate());
+                info.setFarsiDate(GetFarsiDate());
 
-            info.setPriceTypeId(Integer.parseInt(priceType.getPriceTypeId()));
-            info.setPriceTypeIdItem(priceType.getPriceTypeItemId());
-            info.setCreatorUserId(priceType.getPriceCreatorUserId());
-            info.setCreationDate(priceType.getPriceCreationDate());
+
+
+            }
 
 
         }else{
+
+
             info.setPriceTypeId(infoData.getPriceTypeId());
             info.setPriceTypeIdItem(infoData.getPriceTypeIdItem());
             info.setCreatorUserId(infoData.getCreatorUserId());
             info.setCreationDate(infoData.getCreationDate());
         }
-
-
 
 
         OperationResult result = InfoRepository.getInstance().AddPrice(info, id);
@@ -414,6 +463,19 @@ public class AddExpensesFragment extends Fragment implements View.OnClickListene
 
     }
 
+    private String GetFarsiDate() {
+        if (chooseDate==null) return Utility.getIranianDate();
+        else  return chooseDate;
+    }
+    private int GetActionDate() {
+        if (ActionDate==0) return Utility.GetActionDate();
+        else  return ActionDate;
+    }
+    private  String  GetEngDate() {
+        Date date1 = new Date();
+        if (engDate ==null) return   DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.SHORT).format(date1);
+        else  return engDate;
+    }
 
     private void OpenPriceTypeDialog() {
         DialogFragmentPriceType dialog = new DialogFragmentPriceType();

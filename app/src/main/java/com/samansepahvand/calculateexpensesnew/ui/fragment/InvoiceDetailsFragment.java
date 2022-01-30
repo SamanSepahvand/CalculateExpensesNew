@@ -64,7 +64,7 @@ public class InvoiceDetailsFragment extends Fragment implements View.OnClickList
 
     private NavController navController;
 
-    private TextView txtInvoiceTitle, txtInvoicePriceTypeFullName,
+    private TextView txtInvoiceListSame,txtInvoiceTitle, txtInvoicePriceTypeFullName,
             txtInvoicePriceValue, txtInvoiceCreatorFullName, txtCreationFullDate, txtEstimatedDate;
     private Button btnInvoiceShare;
     private ImageView imgBack,imgMainLogoPriceType;
@@ -127,7 +127,9 @@ public class InvoiceDetailsFragment extends Fragment implements View.OnClickList
     }
 
     private void initView(View view) {
+
         verifystoragepermissions(getActivity());
+
 
         txtInvoiceTitle = view.findViewById(R.id.txt_title);
         txtInvoicePriceTypeFullName = view.findViewById(R.id.txt_price_type_full_name);
@@ -139,7 +141,8 @@ public class InvoiceDetailsFragment extends Fragment implements View.OnClickList
         imgBack = view.findViewById(R.id.img_back);
         imgMainLogoPriceType=view.findViewById(R.id.img_main_logo_price_type);
 
-        _iGetSomeInfoMeta=(SameInvoiceAdapter.IGetSomeInfoMeta)this;
+        txtInvoiceListSame=view.findViewById(R.id.txt_no_same_invoice);
+         _iGetSomeInfoMeta=(SameInvoiceAdapter.IGetSomeInfoMeta)this;
         recyclerviewSameInvoices = view.findViewById(R.id.recyclerview_same_product);
 
 
@@ -150,20 +153,25 @@ public class InvoiceDetailsFragment extends Fragment implements View.OnClickList
     private void initRecyclerView() {
 
         recyclerviewSameInvoices.setHasFixedSize(true);
-        recyclerviewSameInvoices.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerviewSameInvoices.setAdapter(new SameInvoiceAdapter(getActivity(), getSameInvoices(),_iGetSomeInfoMeta));
-    }
 
-    private List<InfoMetaModel> getSameInvoices() {
+        recyclerviewSameInvoices.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         OperationResult<InfoMetaModel> result = InfoRepository.getInstance().GetSameInvoices(infoMetaModel);
         if (result.IsSuccess){
-            return result.Items;
+            recyclerviewSameInvoices.setVisibility(View.VISIBLE);
+            txtInvoiceListSame.setVisibility(View.GONE);
+            recyclerviewSameInvoices.setAdapter(new SameInvoiceAdapter(getActivity(), result.Items,_iGetSomeInfoMeta));
         }else{
-            DialogFailed(result.Message,getActivity());
-            return null;
+            txtInvoiceListSame.setVisibility(View.VISIBLE);
+            recyclerviewSameInvoices.setVisibility(View.GONE);
+
+          //  DialogFailed(result.Message,getActivity());
+            return ;
         }
 
     }
+
+
+
 
     private void initData() {
 
@@ -174,13 +182,19 @@ public class InvoiceDetailsFragment extends Fragment implements View.OnClickList
 
 
             txtInvoicePriceTypeFullName.setText(infoMetaModel.getPriceTypeName() + " » " + infoMetaModel.getPriceTypeItemName());
-
             String str = "<font color=red><b>" +
                     splitDigits(infoMetaModel.getPrice()) +
                     "</b></font>"
                     + "  ریال ";
+
             Spanned strHtml = Html.fromHtml(str);
             txtInvoicePriceValue.setText(strHtml);
+
+            txtInvoiceListSame.setCompoundDrawablesWithIntrinsicBounds(0,Constants.PriceTypeHeaderPicture[infoMetaModel.getPriceTypeId()],0,0);
+            Spanned strHtml1 = Html.fromHtml("فاکتور مشابه ای در دسته بندی "+
+                    "<font color=red><b>" +infoMetaModel.getPriceTypeName()
+                    + "</b></font>" +" وجود ندارد  ");
+            txtInvoiceListSame.setText(strHtml1);
 
 
             txtInvoiceCreatorFullName.setText(getFullName(infoMetaModel.getCreatorUserId()));
@@ -263,8 +277,6 @@ public class InvoiceDetailsFragment extends Fragment implements View.OnClickList
     @Override
     public void GetSomeInfoMeta(InfoMetaModel infoMetaModel,String typeShow) {
         if (typeShow.equals("Single")){
-
-
             InvoiceDetailsFragmentDirections.ActionInvoiceDetailsFragmentSelf action=
                     InvoiceDetailsFragmentDirections.actionInvoiceDetailsFragmentSelf();
 

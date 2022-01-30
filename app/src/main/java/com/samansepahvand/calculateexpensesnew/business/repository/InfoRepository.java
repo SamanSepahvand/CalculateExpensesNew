@@ -5,6 +5,7 @@ import android.content.Context;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.activeandroid.util.SQLiteUtils;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.DateModel;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.DetailMainInfo;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.InfoMetaModel;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
@@ -56,11 +57,11 @@ public class InfoRepository {
                 if (infoUpdate != null) {
 
                     infoUpdate.setPrice(info.getPrice());
-                    infoUpdate.setDate(info.getDate());
                     infoUpdate.setTitle(info.getTitle());
+                    infoUpdate.setEnglishDate(info.getEnglishDate());
+                    infoUpdate.setFarsiDate(info.getFarsiDate());
 
-                    infoUpdate.setEnglishDate(String.valueOf(Utility.getMiladyDate()));
-                    infoUpdate.setFarsiDate(Utility.getIranianDate());
+
 
                     infoUpdate.save();
                     return new OperationResult<>(null, true, null);
@@ -68,10 +69,14 @@ public class InfoRepository {
                     return new OperationResult<>("خطا ", false, null);
                 }
             } else {
-                Date date = new Date();
-                info.setDate(DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.SHORT).format(date));
-                info.setEnglishDate(String.valueOf(Utility.getMiladyDate()));
-                info.setFarsiDate(Utility.getIranianDate());
+
+                //  info.setDate(info.getDate());
+               // info.setEnglishDate(String.valueOf(Utility.getMiladyDate()));
+
+                 info.setEnglishDate(info.getEnglishDate());
+
+                info.setFarsiDate(info.getFarsiDate());
+
 
                 info.save();
                 return new OperationResult<>(null, true, null);
@@ -96,7 +101,7 @@ public class InfoRepository {
 
     }
 
-    public OperationResult<InfoMetaModel> GetInfo() {
+    public OperationResult<InfoMetaModel> GetInfo(DateModel dateModel) {
         try {
             int totalPrice = 0;
 
@@ -107,6 +112,7 @@ public class InfoRepository {
 
             String query = "select * from info  i " +
                     " left join priceType t on t.PriceTypeItemId=i.priceTypeIdItem and t.PriceTypeId=i.PriceTypeId  " +
+                    " where i.actiondate>="+dateModel.getFromDate()+" and i.actiondate<="+dateModel.getToDate()+
                     " order by id desc";
 
 
@@ -255,4 +261,44 @@ public class InfoRepository {
 
     }
 
+    public OperationResult<InfoMetaModel> GetSearchInfo(DateModel dateModel) {
+        try {
+            int totalPrice = 0;
+
+//            List<Info> infos = new Select().from(Info.class)
+//                    .orderBy("id desc")
+//                    .execute();
+
+
+            String query = "select * from info  i " +
+                    " left join priceType t on t.PriceTypeItemId=i.priceTypeIdItem and t.PriceTypeId=i.PriceTypeId  " +
+                    " where i.actiondate>="+dateModel.getFromDate()+" and i.actiondate<="+dateModel.getToDate()+
+                    " order by id desc";
+
+
+            List<InfoMetaModel> metaModels = SQLiteUtils.rawQuery(InfoMetaModel.class, query, null);
+
+
+            if (metaModels.size() > 0) {
+                for (InfoMetaModel info : metaModels) {
+                    totalPrice += info.getPrice();
+                    info.setFarsiDate(Utility.ShowTimeFarsiMeta(info));
+                    info.setEstimateDate(Utility.SeparateTimeForEstimate(info.getEnglishDate()).getEstimatedTime() + " روز پیش ");
+
+                }
+
+
+                return new OperationResult<>(String.valueOf(totalPrice), true, null, null, Utility.OrderByDateDescMeta(metaModels));
+            }
+            return new OperationResult<>("فاکتوری برای نمایش وجود ندارد", false, null);
+        } catch (
+                Exception e) {
+            return new OperationResult<>("خطا در  نمایش فااکتور ها رخ داده !", false, e.getMessage());
+
+
+        }
+
+
+
+    }
 }

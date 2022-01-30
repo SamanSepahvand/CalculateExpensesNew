@@ -1,5 +1,7 @@
 package com.samansepahvand.calculateexpensesnew.ui.fragment;
 
+import static com.samansepahvand.calculateexpensesnew.infrastructure.Utility.GetFirstLastDayMonthFarsi;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -25,6 +27,7 @@ import android.widget.Toast;
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension;
 import com.samansepahvand.calculateexpensesnew.R;
 import com.samansepahvand.calculateexpensesnew.business.domain.Constants;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.DateModel;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.InfoMetaModel;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.UserInformations;
@@ -36,12 +39,13 @@ import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
 import com.samansepahvand.calculateexpensesnew.ui.adapter.ItemTouchHelperCallback;
 import com.samansepahvand.calculateexpensesnew.ui.adapter.MainRecyclerAdapter;
 import com.samansepahvand.calculateexpensesnew.ui.adapter.MyExpandableListAdapter;
+import com.samansepahvand.calculateexpensesnew.ui.dialog.DialogChooseDate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListExpensesFragment extends Fragment implements View.OnClickListener, ActionInfo, SearchView.OnQueryTextListener,
-        MainRecyclerAdapter.IGetMetaInfo , MyExpandableListAdapter.IGetPriceType {
+        MainRecyclerAdapter.IGetMetaInfo, MyExpandableListAdapter.IGetPriceType {
 
 
     private static final String ARG_PARAM1 = "param1";
@@ -50,7 +54,7 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
     private String mParam1;
     private String mParam2;
     private RecyclerView recyclerView;
-    private TextView txtTotalPrice,txtInvoiceCount,txtFullName;
+    private TextView txtTotalPrice, txtInvoiceCount, txtFullName;
     private MainRecyclerAdapter showAdapter;
     private ItemTouchHelperExtension mItemTouchHelper;
     private ItemTouchHelperCallback mCallback;
@@ -58,7 +62,12 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
     private SearchView searchView;
     private ImageView imgBack;
 
-private MainRecyclerAdapter.IGetMetaInfo iGetMetaInfo;
+    private TextView txtFromDateToDate;
+
+
+    private MainRecyclerAdapter.IGetMetaInfo iGetMetaInfo;
+
+    private DateModel dateModel;
 
     public ListExpensesFragment() {
         // Required empty public constructor
@@ -98,54 +107,48 @@ private MainRecyclerAdapter.IGetMetaInfo iGetMetaInfo;
     }
 
     private void intiView(View view) {
+
         navController = Navigation.findNavController(view);
-
-        txtFullName=view.findViewById(R.id.txt_full_name);
-
-        imgBack=view.findViewById(R.id.img_back);
-
-        searchView=view.findViewById(R.id.search_view);
-
+        txtFullName = view.findViewById(R.id.txt_full_name);
+        imgBack = view.findViewById(R.id.img_back);
+        searchView = view.findViewById(R.id.search_view);
         TextView textView = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
         textView.setTextSize(12);
         textView.setTypeface(Constants.CustomStyleElement());
-
-
-
-        txtInvoiceCount=view.findViewById(R.id.txt_count);
+        txtFromDateToDate = view.findViewById(R.id.txt_from_date_to_date);
+        txtInvoiceCount = view.findViewById(R.id.txt_count);
         txtTotalPrice = view.findViewById(R.id.txt_total_price);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        iGetMetaInfo=(MainRecyclerAdapter.IGetMetaInfo)this;
-        showAdapter = new MainRecyclerAdapter(getContext(),iGetMetaInfo);
-
+        iGetMetaInfo = (MainRecyclerAdapter.IGetMetaInfo) this;
+        showAdapter = new MainRecyclerAdapter(getContext(), iGetMetaInfo);
         recyclerView.setAdapter(showAdapter);
         initData();
-
         searchView.setOnQueryTextListener(this);
         imgBack.setOnClickListener(this);
-
-
+        txtFromDateToDate.setOnClickListener(this);
         txtTotalPrice.setOnClickListener(this);
         txtFullName.setText(UserInformations.getFullName());
+
+
     }
 
     private void SupplierProductDeliveryData(final List<InfoMetaModel> items) {
 
         items.add(DammyData());
-        txtInvoiceCount.setText("تعداد: "+(items.size()-1)+"");
+        txtInvoiceCount.setText("تعداد: " + (items.size() - 1) + "");
         showAdapter.updateData(items);
         mCallback = new ItemTouchHelperCallback();
         mItemTouchHelper = new ItemTouchHelperExtension(mCallback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
         recyclerView.smoothScrollToPosition(0);
+
     }
 
 
     private InfoMetaModel DammyData() {
         InfoMetaModel deliveryMetaModel = new InfoMetaModel();
-        deliveryMetaModel.setDate("");
         deliveryMetaModel.setPrice(0);
         deliveryMetaModel.setTitle("633325632");
         return deliveryMetaModel;
@@ -153,8 +156,11 @@ private MainRecyclerAdapter.IGetMetaInfo iGetMetaInfo;
 
 
     private void initData() {
-        OperationResult result = InfoRepository.getInstance().GetInfo();
+        dateModel = GetFirstLastDayMonthFarsi();
+
+        OperationResult result = InfoRepository.getInstance().GetInfo(dateModel);
         if (result.IsSuccess) {
+            txtFromDateToDate.setText(DataModelInfoDesc(dateModel));
             SupplierProductDeliveryData(result.Items);
             txtTotalPrice.setText(Utility.splitDigits(Integer.parseInt(result.Message)));
         } else {
@@ -174,6 +180,7 @@ private MainRecyclerAdapter.IGetMetaInfo iGetMetaInfo;
 
 
     }
+
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
@@ -183,9 +190,9 @@ private MainRecyclerAdapter.IGetMetaInfo iGetMetaInfo;
     @Override
     public boolean onQueryTextChange(String s) {
         int countShow = 0;
-        OperationResult<InfoMetaModel> result = InfoRepository.getInstance().GetInfo();
+        OperationResult<InfoMetaModel> result = InfoRepository.getInstance().GetInfo(dateModel);
         List<InfoMetaModel> newList = new ArrayList<>();
-        for (InfoMetaModel info : result.Items ) {
+        for (InfoMetaModel info : result.Items) {
             if (info.getTitle().toLowerCase().contains(s)) {
                 newList.add(info);
             } else {
@@ -198,12 +205,11 @@ private MainRecyclerAdapter.IGetMetaInfo iGetMetaInfo;
     }
 
 
-
     @Override
     public void
     actionDelete(Info info) {
 
-        if (info!=null){
+        if (info != null) {
 
         }
 
@@ -212,21 +218,49 @@ private MainRecyclerAdapter.IGetMetaInfo iGetMetaInfo;
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.img_back:
                 navController.popBackStack();
                 break;
 
-            case R.id.txt_total_price:
-                break;
 
+            case R.id.txt_from_date_to_date:
+
+                final DialogChooseDate chooseDate = new DialogChooseDate(getActivity(), true, true);
+                chooseDate.setCancelable(false);
+                chooseDate.setAcceptButton(new DialogChooseDate.OnAcceptInterface() {
+                    @Override
+                    public void accept(DateModel dateModel) {
+
+                        txtFromDateToDate.setText(DataModelInfoDesc(dateModel));
+
+
+                        OperationResult<InfoMetaModel> infoMetaModelOperationResult =
+                                InfoRepository.getInstance().GetSearchInfo(dateModel);
+                        if (infoMetaModelOperationResult.IsSuccess) {
+                            showAdapter.updateData(infoMetaModelOperationResult.Items);
+                            txtTotalPrice.setText(Utility.splitDigits(Integer.parseInt(infoMetaModelOperationResult.Message)));
+                        } else {
+                            Toast.makeText(getContext(), infoMetaModelOperationResult.Message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                chooseDate.show();
+                break;
 
         }
     }
 
+
+    private String DataModelInfoDesc(DateModel dateModel) {
+        return " فاکتور های " + dateModel.getFromDateFarsi() + "  تا " + dateModel.getToDateFarsi();
+    }
+
+
     @Override
     public void GetMetaInfo(InfoMetaModel metaModel) {
-        ListExpensesFragmentDirections.ActionListFragmentToInvoiceDetailsFragment action=
+        ListExpensesFragmentDirections.ActionListFragmentToInvoiceDetailsFragment action =
                 ListExpensesFragmentDirections.actionListFragmentToInvoiceDetailsFragment();
         action.setInfoMetaModel(metaModel);
         navController.navigate(action);
@@ -237,6 +271,6 @@ private MainRecyclerAdapter.IGetMetaInfo iGetMetaInfo;
     @Override
     public void GetPriceType(PriceType priceType) {
 
-        Log.e("TAG", "GetPriceType: hi hizenberg " );
+        Log.e("TAG", "GetPriceType: hi hizenberg ");
     }
 }

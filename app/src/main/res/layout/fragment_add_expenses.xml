@@ -79,7 +79,7 @@
                             fontPath="fonts/iran_sans.ttf"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:gravity="right"
+                            android:gravity="left"
                             android:imeOptions="actionNext"
                             android:singleLine="true"
                             android:inputType="number"

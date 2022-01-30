@@ -27,6 +27,8 @@
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.36512820512820515" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/drawable/ic_baseline_close_24_color.xml" value="0.36512820512820515" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/drawable/ic_baseline_confirmation_number_24.xml" value="0.36512820512820515" />
+        <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/drawable/ic_baseline_date_range_24_black.xml" value="0.37083333333333335" />
+        <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/drawable/ic_baseline_date_range_24_green.xml" value="0.37083333333333335" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/drawable/ic_baseline_discount_24.xml" value="0.37083333333333335" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.37083333333333335" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/drawable/ic_baseline_more_vert_24_black.xml" value="0.37083333333333335" />
@@ -40,12 +42,14 @@
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/drawable/shape_background_button_dialog_red.xml" value="0.37083333333333335" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/drawable/shape_background_button_dialog_red_stroke.xml" value="0.37083333333333335" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/drawable/shape_background_button_dialog_yellow.xml" value="0.37083333333333335" />
+        <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/drawable/shape_background_imageview_circle.xml" value="0.37083333333333335" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/layout/_item_main_show_all_price.xml" value="0.19739583333333333" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/layout/activity_authentication.xml" value="0.22282608695652173" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/layout/activity_main.xml" value="0.2957427536231884" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/layout/activity_sign_up.xml" value="0.2957427536231884" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/layout/custom_sheet_shape.xml" value="0.22282608695652173" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/layout/dialog_add_price_type.xml" value="0.3351449275362319" />
+        <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/layout/dialog_choose_date.xml" value="0.24864130434782608" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/layout/dialog_dialog_price_type.xml" value="0.6274131274131274" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/layout/dialog_information1.xml" value="0.22282608695652173" />
         <entry key="..\:/Git_Server/CalculateExpensesNew/app/src/main/res/layout/fragment_add_expenses.xml" value="0.3995459704880817" />

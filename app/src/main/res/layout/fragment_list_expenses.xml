@@ -83,7 +83,7 @@
             android:id="@+id/imageView2"
             android:layout_width="61dp"
             android:layout_height="58dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -112,6 +112,20 @@
             app:layout_constraintEnd_toStartOf="@+id/txt_total_price"
             app:layout_constraintTop_toTopOf="@+id/txt_total_price"
             app:layout_constraintVertical_bias="0.529" />
+
+        <TextView
+            android:id="@+id/txt_from_date_to_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textSize="10sp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:text=" لیست فاکتور ها از تاریخ 00/11/10 تا 00/11/30"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_total_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:drawableRight="@drawable/ic_baseline_date_range_24" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
