@@ -157,15 +157,17 @@ public class InvoiceDetailsFragment extends Fragment implements View.OnClickList
         recyclerviewSameInvoices.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         OperationResult<InfoMetaModel> result = InfoRepository.getInstance().GetSameInvoices(infoMetaModel);
         if (result.IsSuccess){
+
             recyclerviewSameInvoices.setVisibility(View.VISIBLE);
             txtInvoiceListSame.setVisibility(View.GONE);
             recyclerviewSameInvoices.setAdapter(new SameInvoiceAdapter(getActivity(), result.Items,_iGetSomeInfoMeta));
+
         }else{
+
             txtInvoiceListSame.setVisibility(View.VISIBLE);
             recyclerviewSameInvoices.setVisibility(View.GONE);
-
           //  DialogFailed(result.Message,getActivity());
-            return ;
+          return ;
         }
 
     }

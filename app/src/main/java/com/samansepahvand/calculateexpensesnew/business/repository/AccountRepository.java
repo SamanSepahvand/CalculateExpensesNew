@@ -130,7 +130,6 @@ public class AccountRepository {
             return new OperationResult<>(e.getMessage(), false, null);
         }
 
-
     }
 
     public String getUserById(int creatorUserId) {

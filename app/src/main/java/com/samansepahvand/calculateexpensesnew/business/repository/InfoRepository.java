@@ -208,10 +208,6 @@ public class InfoRepository {
             List<InfoMetaModel> metaModels = SQLiteUtils.rawQuery(InfoMetaModel.class, query, null);
 
 
-
-
-
-
             if (metaModels==null)return new OperationResult<>(ResultMessage.ErrorNewMessage, false, null);
             List<InfoMetaModel> newResult= removeDuplicates(metaModels);
 
