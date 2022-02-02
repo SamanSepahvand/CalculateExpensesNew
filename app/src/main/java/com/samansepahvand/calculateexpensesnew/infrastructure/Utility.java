@@ -51,6 +51,10 @@ public class Utility {
             return String.valueOf(number);
         }
     }
+    public static   String  GetEngDate() {
+        Date date1 = new Date();
+          return   DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.SHORT).format(date1);
+    }
 
 
     public static Date getMiladyDate() {

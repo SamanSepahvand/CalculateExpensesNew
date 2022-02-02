@@ -28,6 +28,9 @@ public class MainApplication extends Application {
         this._context=context;
     }
 
+
+
+
     @Override
     public void onCreate() {
         super.onCreate();

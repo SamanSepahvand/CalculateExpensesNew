@@ -1,24 +1,46 @@
 package com.samansepahvand.calculateexpensesnew.ui.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.READ_SMS;
+import static android.Manifest.permission.RECEIVE_SMS;
+import static android.Manifest.permission.SEND_SMS;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.samansepahvand.calculateexpensesnew.MainApplication;
 import com.samansepahvand.calculateexpensesnew.R;
 import com.samansepahvand.calculateexpensesnew.business.domain.Constants;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.business.repository.AccountRepository;
+import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepository;
 import com.samansepahvand.calculateexpensesnew.db.Account;
+import com.samansepahvand.calculateexpensesnew.services.IncomingSmsBroadcastReceiver;
 import com.samansepahvand.calculateexpensesnew.ui.modal.AlertDialogModal;
+
+import org.apache.http.cookie.SM;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -31,6 +53,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private TextInputLayout tilFirstName,tilLastName,tilUserName,tilPassword,tilForgetKey;
 
+
+    private IncomingSmsBroadcastReceiver smsBroadcastReceiver=new IncomingSmsBroadcastReceiver();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +65,158 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         intiView();
 
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter=new IntentFilter(Intent.ACTION_SEND);
+        registerReceiver(smsBroadcastReceiver,filter);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(smsBroadcastReceiver);
+    }
+
+
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), READ_PHONE_STATE);
+        int result2 = ContextCompat.checkSelfPermission(getApplicationContext(), READ_SMS);
+        int result22 = ContextCompat.checkSelfPermission(getApplicationContext(), RECEIVE_SMS);
+        int result224 = ContextCompat.checkSelfPermission(getApplicationContext(), SEND_SMS);
+
+
+
+
+
+        return result == PackageManager.PERMISSION_GRANTED
+                && result1 == PackageManager.PERMISSION_GRANTED
+                && result22 == PackageManager.PERMISSION_GRANTED
+                && result224 == PackageManager.PERMISSION_GRANTED
+                && result2 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+
+        ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE, READ_PHONE_STATE,
+
+
+
+                READ_SMS,RECEIVE_SMS,SEND_SMS
+
+
+        }, 200);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 200:
+                if (grantResults.length > 0) {
+
+                    boolean locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean cameraAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    boolean camera2Accepted1 = grantResults[2] == PackageManager.PERMISSION_GRANTED;
+                    boolean camera2Accepted2 = grantResults[3] == PackageManager.PERMISSION_GRANTED;
+                    boolean camera2Accepted3 = grantResults[4] == PackageManager.PERMISSION_GRANTED;
+
+
+
+
+
+                    if (locationAccepted && cameraAccepted
+
+                    &&camera2Accepted1
+                            &&camera2Accepted2
+                            &&camera2Accepted3) {
+                        showMessage("کل دسترسی ها با موفقیت تایید شد . صفحه مجدد بروز خواهد شد", "s");
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                //recreate();
+                            }
+                        }, 1000);
+
+                    } else {
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE) &&
+                                    shouldShowRequestPermissionRationale(READ_PHONE_STATE) &&
+                                    shouldShowRequestPermissionRationale(CAMERA)&&
+                            shouldShowRequestPermissionRationale(READ_SMS)&&
+                            shouldShowRequestPermissionRationale(RECEIVE_SMS)&&
+                            shouldShowRequestPermissionRationale(SEND_SMS)
+
+                            ) {
+                                showMessageOKCancel("دسترسی تایید نشد! شما اجازه استفاده از سایر قسمت های سیستم را نداری  ",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                    requestPermissions(new String[]{
+                                                            WRITE_EXTERNAL_STORAGE, READ_PHONE_STATE, READ_SMS,SEND_SMS,RECEIVE_SMS
+
+
+
+                                                            },
+                                                            200);
+                                                }
+                                            }
+                                        });
+                                return;
+                            }
+                        }
+
+                    }
+                }
+
+
+                break;
+        }
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/iran_sans.ttf");
+        TextView content = new TextView(this);
+        content.setText("برای استفاده از سایر امکانات  برنامه به دسترسی ها نیاز داریم!");
+        content.setTypeface(face);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.alert));
+        alertDialogBuilder.setTitle("درخواست دسترسی");
+        alertDialogBuilder.setIcon(R.mipmap.ic_launcher);
+        alertDialogBuilder.setView(content);
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("تایید", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                requestPermission();
+            }
+        });
+        alertDialogBuilder.setNeutralButton("انصراف", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
+
+    private void showMessage(String body, String type) {
+            Toast.makeText(this, "" + body, Toast.LENGTH_SHORT).show();
+
+    }
+
 
 
     private void intiView() {
@@ -67,6 +244,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         btnSignUp.setOnClickListener(this);
 
+
+        if (!checkPermission()) {
+            requestPermission();
+        }
+
+
+      //  OperationResult result= InfoRepository.getInstance().DeleteItemInfo(29);
     }
 
     @Override
@@ -155,3 +339,5 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 }
+
+

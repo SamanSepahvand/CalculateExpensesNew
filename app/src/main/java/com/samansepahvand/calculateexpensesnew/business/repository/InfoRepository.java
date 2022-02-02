@@ -5,17 +5,20 @@ import android.content.Context;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.activeandroid.util.SQLiteUtils;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.AutoPriceModel;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.DateModel;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.DetailMainInfo;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.InfoMetaModel;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.OperationResult;
 import com.samansepahvand.calculateexpensesnew.business.metamodel.ResultMessage;
+import com.samansepahvand.calculateexpensesnew.business.metamodel.UserInformations;
 import com.samansepahvand.calculateexpensesnew.db.Info;
 import com.samansepahvand.calculateexpensesnew.infrastructure.Utility;
 
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -59,8 +62,7 @@ public class InfoRepository {
                     infoUpdate.setPrice(info.getPrice());
                     infoUpdate.setTitle(info.getTitle());
                     infoUpdate.setEnglishDate(info.getEnglishDate());
-                    infoUpdate.setFarsiDate(info.getFarsiDate());
-
+                    infoUpdate.setFarsiDate(Utility.getIranianDate());
 
 
                     infoUpdate.save();
@@ -71,12 +73,10 @@ public class InfoRepository {
             } else {
 
                 //  info.setDate(info.getDate());
-               // info.setEnglishDate(String.valueOf(Utility.getMiladyDate()));
+                // info.setEnglishDate(String.valueOf(Utility.getMiladyDate()));
 
-                 info.setEnglishDate(info.getEnglishDate());
-
+                info.setEnglishDate(info.getEnglishDate());
                 info.setFarsiDate(info.getFarsiDate());
-
 
                 info.save();
                 return new OperationResult<>(null, true, null);
@@ -88,6 +88,17 @@ public class InfoRepository {
 
     }
 
+    public OperationResult DeleteItemInfo(int  id) {
+
+        try {
+            new Delete().from(Info.class).where("Id=?", id).execute();
+
+            return new OperationResult<>(null, true, null);
+        } catch (Exception e) {
+            return new OperationResult<>("خطا در حذف فاکتور !", false, e.getMessage());
+        }
+
+    }
 
     public OperationResult DeleteItem(Info info) {
 
@@ -112,7 +123,7 @@ public class InfoRepository {
 
             String query = "select * from info  i " +
                     " left join priceType t on t.PriceTypeItemId=i.priceTypeIdItem and t.PriceTypeId=i.PriceTypeId  " +
-                    " where i.actiondate>="+dateModel.getFromDate()+" and i.actiondate<="+dateModel.getToDate()+
+                    " where i.actiondate>=" + dateModel.getFromDate() + " and i.actiondate<=" + dateModel.getToDate() +
                     " order by id desc";
 
 
@@ -203,31 +214,31 @@ public class InfoRepository {
         try {
             String query = "select distinct *   from info  i " +
                     " left join priceType t  on  t.PriceTypeId=i.PriceTypeId  "
-                    +"where i.PriceTypeId= "+infoMetaModel.getPriceTypeId()+"  and  i.id<>"+infoMetaModel.getId()+
+                    + "where i.PriceTypeId= " + infoMetaModel.getPriceTypeId() + "  and  i.id<>" + infoMetaModel.getId() +
                     " order by id asc  limit 10";
             List<InfoMetaModel> metaModels = SQLiteUtils.rawQuery(InfoMetaModel.class, query, null);
 
 
-            if (metaModels==null)return new OperationResult<>(ResultMessage.ErrorNewMessage, false, null);
-            List<InfoMetaModel> newResult= removeDuplicates(metaModels);
+            if (metaModels == null)
+                return new OperationResult<>(ResultMessage.ErrorNewMessage, false, null);
+            List<InfoMetaModel> newResult = removeDuplicates(metaModels);
 
 
-            InfoMetaModel first=new InfoMetaModel();
+            InfoMetaModel first = new InfoMetaModel();
             first.setPriceTypeId(newResult.get(0).getPriceTypeId());
 
-           first.setTitle("مشاهده همه");
+            first.setTitle("مشاهده همه");
 
 
-            InfoMetaModel last=new InfoMetaModel();
+            InfoMetaModel last = new InfoMetaModel();
             last.setPriceTypeId(newResult.get(0).getPriceTypeId());
             last.setTitle("مشاهده همه >");
 
 
+            newResult.add(0, last);
+            newResult.add(newResult.size(), first);
 
-            newResult.add(0,last);
-            newResult.add(newResult.size(),first);
-
-            return new OperationResult<>(null ,true, null,null,newResult);
+            return new OperationResult<>(null, true, null, null, newResult);
 
 
         } catch (Exception e) {
@@ -268,7 +279,7 @@ public class InfoRepository {
 
             String query = "select * from info  i " +
                     " left join priceType t on t.PriceTypeItemId=i.priceTypeIdItem and t.PriceTypeId=i.PriceTypeId  " +
-                    " where i.actiondate>="+dateModel.getFromDate()+" and i.actiondate<="+dateModel.getToDate()+
+                    " where i.actiondate>=" + dateModel.getFromDate() + " and i.actiondate<=" + dateModel.getToDate() +
                     " order by id desc";
 
 
@@ -295,6 +306,36 @@ public class InfoRepository {
         }
 
 
+    }
+
+    public OperationResult AutoAddPrice(AutoPriceModel autoPriceModel) {
+
+
+        try {
+            if (autoPriceModel == null)
+                return new OperationResult<>("مبلغ دریافتی معتبر نیست", false, null);
+
+            Info info = new Info();
+            info.setEnglishDate(Utility.GetEngDate());
+            info.setActionDate(Utility.GetActionDate());
+            info.setFarsiDate(Utility.getIranianDate());
+            info.setPrice(Integer.parseInt(autoPriceModel.getPrice()));
+            info.setTitle(autoPriceModel.getBankName()+" - "+autoPriceModel.getPriceTitle());
+
+            info.setPriceTypeId(0);
+            info.setPriceTypeIdItem(3);
+            info.setCreatorUserId(UserInformations.getUserId());
+
+            Calendar calendar=Calendar.getInstance();
+            info.setCreationDate(calendar.getTime()+"");
+
+
+            return AddPrice(info, 0);
+
+        } catch (Exception e) {
+            return new OperationResult<>("خطا در ذخیره خودکار فاکتور دریافتی.", false, e.getMessage());
+
+        }
 
     }
 }

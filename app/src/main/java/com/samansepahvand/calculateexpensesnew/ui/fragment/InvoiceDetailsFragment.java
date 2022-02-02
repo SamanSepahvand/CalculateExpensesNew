@@ -165,7 +165,9 @@ public class InvoiceDetailsFragment extends Fragment implements View.OnClickList
         }else{
 
             txtInvoiceListSame.setVisibility(View.VISIBLE);
+
             recyclerviewSameInvoices.setVisibility(View.GONE);
+
           //  DialogFailed(result.Message,getActivity());
           return ;
         }

@@ -5,6 +5,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,6 +17,7 @@ import com.samansepahvand.calculateexpensesnew.business.repository.InfoRepositor
 import com.samansepahvand.calculateexpensesnew.db.Info;
 import com.samansepahvand.calculateexpensesnew.db.PriceType;
 import com.samansepahvand.calculateexpensesnew.helper.interfaces.ActionInfo;
+import com.samansepahvand.calculateexpensesnew.services.IncomingSmsBroadcastReceiver;
 import com.samansepahvand.calculateexpensesnew.ui.adapter.MyExpandableListAdapter;
 import com.samansepahvand.calculateexpensesnew.ui.fragment.AddExpensesFragmentDirections;
 import com.samansepahvand.calculateexpensesnew.ui.fragment.ListExpensesFragmentDirections;
@@ -26,6 +29,9 @@ public class MainActivity extends AppCompatActivity implements ActionInfo {
 
     private static final String TAG = "MainActivity";
     private NavController navController;
+    private IncomingSmsBroadcastReceiver smsBroadcastReceiver=new IncomingSmsBroadcastReceiver();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,20 @@ public class MainActivity extends AppCompatActivity implements ActionInfo {
         setContentView(R.layout.activity_main);
         initView();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter=new IntentFilter(Intent.ACTION_SEND);
+        registerReceiver(smsBroadcastReceiver,filter);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(smsBroadcastReceiver);
     }
 
     private void initView() {
