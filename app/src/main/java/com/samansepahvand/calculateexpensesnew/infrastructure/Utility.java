@@ -166,6 +166,7 @@ public class Utility {
         String date = String.format(Locale.US, "%d/%02d/%02d",
                 tool.getIranianYear(), tool.getIranianMonth(),
                 tool.getIranianDay());
+
         return date;
     }
 
@@ -181,19 +182,23 @@ public class Utility {
 
     public static DateModel GetFirstLastDayMonthFarsi() {
 
+
         DateModel result = new DateModel();
 
-
         List<CalculateDate> dateListFinall = new ArrayList<>();
-        dateListFinall.addAll(getCalculateDate(true));
-        dateListFinall.addAll(getCalculateDate(false));
+        dateListFinall.addAll(getCalculateDate(1));     /// curent month
+        dateListFinall.addAll(getCalculateDate(-1));   // prev month
+        dateListFinall.addAll(getCalculateDate(2));   // +1 month next
+
+
 
         List<CalculateDate> newDate = new ArrayList<>();
 
         for (CalculateDate item : dateListFinall) {
             CalculateDate calculateDate = new CalculateDate();
             String[] data = item.getFarsiDate().split("/");
-            if (data[1].equals("11")) {
+
+            if (data[1].equals(getIranianDateInt().split("/")[1])) {
                 calculateDate.setActionDate(item.getActionDate());
                 calculateDate.setFarsiDate(item.getFarsiDate());
                 calculateDate.setEngDate(item.getEngDate());
@@ -214,17 +219,34 @@ public class Utility {
 
     }
 
-    private static List<CalculateDate> getCalculateDate(boolean isPrev) {
+    private static List<CalculateDate> getCalculateDate(int  monthNumber) {
 
         List<CalculateDate> dateList1111 = new ArrayList<>();
 
 
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.MONTH, 1);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
 
-        if (isPrev)
-            cal.add(Calendar.MONTH, -1);
+       // cal.set(Calendar.MONTH, 1);
+
+        switch (monthNumber){
+
+
+            case -1:
+                cal.set(Calendar.MONTH, -1);
+
+                break;
+            case 1:
+                cal.set(Calendar.MONTH, 1);
+                break;
+
+            case 2:
+                cal.set(Calendar.MONTH, 2);
+                break;
+
+        }
+
+
+
 
         int maxDay1 = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         SimpleDateFormat df1 = new SimpleDateFormat("yyyyMMdd");

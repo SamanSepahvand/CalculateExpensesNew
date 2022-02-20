@@ -294,8 +294,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         } else {
                             errorSignUp(result.Message);
                         }
-
-
                     } else {
                         Toast.makeText(this, "خطا : " + " رمز عبور  را وارد کنید !", Toast.LENGTH_SHORT).show();
                     }
@@ -307,10 +305,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
         } else {
             Toast.makeText(this, "خطا : " + " نام خود را وارد کنید !", Toast.LENGTH_SHORT).show();
-
         }
-
-
     }
 
 
@@ -322,9 +317,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         modal2.setAcceptButton(new AlertDialogModal.OnAcceptInterface() {
             @Override
             public void accept() {
-
                 modal2.dismiss();
-
             }
         });
         modal2.show();
