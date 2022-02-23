@@ -191,6 +191,15 @@ public class Utility {
         dateListFinall.addAll(getCalculateDate(2));   // +1 month next
 
 
+        Collections.sort(dateListFinall, new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                CalculateDate p1 = (CalculateDate) o1;
+                CalculateDate p2 = (CalculateDate) o2;
+                return p1.getActionDate().toString().compareToIgnoreCase(p2.getActionDate().toString());
+            }
+        });
+
 
         List<CalculateDate> newDate = new ArrayList<>();
 
@@ -233,7 +242,7 @@ public class Utility {
 
             case -1:
                 cal.set(Calendar.MONTH, -1);
-
+                cal.set(Calendar.DAY_OF_MONTH, 1);
                 break;
             case 1:
                 cal.set(Calendar.MONTH, 1);

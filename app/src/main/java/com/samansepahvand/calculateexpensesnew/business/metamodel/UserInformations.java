@@ -22,6 +22,8 @@ public class UserInformations {
 //        password = ppassword;
 //
 //    }
+
+
     public static void SetValues(int userIdd,String puserName, String passwordd, String fullNames){
         userName = puserName;
         password = passwordd;
