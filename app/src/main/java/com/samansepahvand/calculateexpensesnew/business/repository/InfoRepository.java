@@ -123,7 +123,12 @@ public class InfoRepository {
 
             String query = "select * from info  i " +
                     " left join priceType t on t.PriceTypeItemId=i.priceTypeIdItem and t.PriceTypeId=i.PriceTypeId  " +
-                    " where i.actiondate>=" + dateModel.getFromDate() + " and i.actiondate<=" + dateModel.getToDate() +
+                   // " where (i.actiondate>=" + dateModel.getFromDate() + " and i.actiondate<=" + dateModel.getToDate()+" )" +
+
+                    " where i.actiondate between " + dateModel.getFromDate() + " and " + dateModel.getToDate()+" " +
+
+
+
                     " order by id desc";
 
 

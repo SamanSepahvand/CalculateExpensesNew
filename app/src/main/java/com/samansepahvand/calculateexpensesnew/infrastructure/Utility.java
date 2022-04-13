@@ -189,7 +189,7 @@ public class Utility {
         dateListFinall.addAll(getCalculateDate(1));     /// curent month
         dateListFinall.addAll(getCalculateDate(-1));   // prev month
         dateListFinall.addAll(getCalculateDate(2));   // +1 month next
-
+        dateListFinall.addAll(getCalculateDate(3));
 
         Collections.sort(dateListFinall, new Comparator() {
             @Override
@@ -203,11 +203,13 @@ public class Utility {
 
         List<CalculateDate> newDate = new ArrayList<>();
 
+        String monthFarsi=getIranianDateInt().split("/")[1];
+
         for (CalculateDate item : dateListFinall) {
             CalculateDate calculateDate = new CalculateDate();
             String[] data = item.getFarsiDate().split("/");
 
-            if (data[1].equals(getIranianDateInt().split("/")[1])) {
+            if (data[1].equals(monthFarsi)) {
                 calculateDate.setActionDate(item.getActionDate());
                 calculateDate.setFarsiDate(item.getFarsiDate());
                 calculateDate.setEngDate(item.getEngDate());

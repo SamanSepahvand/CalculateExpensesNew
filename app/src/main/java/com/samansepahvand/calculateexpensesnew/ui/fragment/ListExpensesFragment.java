@@ -156,10 +156,11 @@ public class ListExpensesFragment extends Fragment implements View.OnClickListen
 
 
     private void initData() {
+
         dateModel = GetFirstLastDayMonthFarsi();
 
         OperationResult result = InfoRepository.getInstance().GetInfo(dateModel);
-        if (result.IsSuccess) {
+         if (result.IsSuccess) {
             txtFromDateToDate.setText(DataModelInfoDesc(dateModel));
             SupplierProductDeliveryData(result.Items);
             txtTotalPrice.setText(Utility.splitDigits(Integer.parseInt(result.Message)));
