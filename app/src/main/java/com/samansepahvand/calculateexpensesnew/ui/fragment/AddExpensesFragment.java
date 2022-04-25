@@ -511,6 +511,7 @@ private int ActionDate=0;
         if (priceType != null) {
             txtPriceTypeResult.setVisibility(View.VISIBLE);
             txtPriceTypeResult.setText(priceType.getPriceTypeName() + "");
+            edtTitle.setText(priceType.getPriceTypeItemName());
         }
     }
 

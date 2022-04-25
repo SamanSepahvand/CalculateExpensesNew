@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -189,7 +190,7 @@ public class Utility {
         dateListFinall.addAll(getCalculateDate(1));     /// curent month
         dateListFinall.addAll(getCalculateDate(-1));   // prev month
         dateListFinall.addAll(getCalculateDate(2));   // +1 month next
-        dateListFinall.addAll(getCalculateDate(3));
+
 
         Collections.sort(dateListFinall, new Comparator() {
             @Override
@@ -236,22 +237,26 @@ public class Utility {
 
 
         Calendar cal = Calendar.getInstance();
-
+        cal.setTime(new Date());
        // cal.set(Calendar.MONTH, 1);
+
+
+
+
 
         switch (monthNumber){
 
-
             case -1:
-                cal.set(Calendar.MONTH, -1);
+                cal.add(Calendar.MONTH, -1);
                 cal.set(Calendar.DAY_OF_MONTH, 1);
+
                 break;
             case 1:
-                cal.set(Calendar.MONTH, 1);
+               // cal.set(Calendar.MONTH, 1);
                 break;
 
             case 2:
-                cal.set(Calendar.MONTH, 2);
+                cal.add(Calendar.MONTH, 1);
                 break;
 
         }
